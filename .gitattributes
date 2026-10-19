@@ -1,0 +1,6 @@
+* text=auto
+*.cs text
+*.md text
+*.ps1 text eol=crlf
+*.cmd text eol=crlf
+*.sed text eol=crlf

@@ -1,4 +1,4 @@
-$ErrorActionPreference = 'Stop'
+﻿$ErrorActionPreference = 'Stop'
 $projectRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 Set-Location $projectRoot
 
@@ -10,6 +10,19 @@ $env:APPDATA = Join-Path $projectRoot '.tools\appdata'
 $env:DOTNET_SKIP_FIRST_TIME_EXPERIENCE = '1'
 $env:DOTNET_CLI_TELEMETRY_OPTOUT = '1'
 New-Item -ItemType Directory -Force -Path $env:DOTNET_CLI_HOME, $env:NUGET_PACKAGES, $env:APPDATA | Out-Null
+
+& $dotnet run --project '.\CrystalMix.Tests\CrystalMix.Tests.csproj' -c Release --configfile '.\NuGet.Config'
+if ($LASTEXITCODE -ne 0) { throw 'Tests failed; packaging cancelled.' }
+foreach ($script in @('Install.ps1', 'Uninstall.ps1')) {
+    $bytes = [IO.File]::ReadAllBytes((Join-Path $projectRoot "installer\$script"))
+    if ($bytes[0] -ne 239 -or $bytes[1] -ne 187 -or $bytes[2] -ne 191) { throw "UTF-8 BOM required: $script" }
+    $errors = $null; $tokens = $null
+    [Management.Automation.Language.Parser]::ParseFile((Join-Path $projectRoot "installer\$script"), [ref]$tokens, [ref]$errors) | Out-Null
+    if ($errors.Count) { throw "Script syntax error: $script" }
+}
+foreach ($file in @('CrystalMix.sed', 'Install.cmd', 'Uninstall.cmd')) {
+    if ([IO.File]::ReadAllBytes((Join-Path $projectRoot "installer\$file")) | Where-Object { $_ -gt 127 }) { throw "ASCII required: $file" }
+}
 
 $publishDir = Join-Path $projectRoot 'dist\publish'
 $payloadDir = Join-Path $projectRoot 'dist\installer-payload'
@@ -35,8 +48,13 @@ foreach ($file in @('Install.cmd', 'Install.ps1', 'Uninstall.cmd', 'Uninstall.ps
 
 $iexpress = Join-Path $env:WINDIR 'System32\iexpress.exe'
 if (-not (Test-Path -LiteralPath $iexpress)) { throw 'Windows IExpress was not found.' }
-& $iexpress /N /Q '.\installer\CrystalMix.sed'
-if ($LASTEXITCODE -ne 0) { throw 'IExpress packaging failed.' }
+$package = Join-Path $projectRoot 'dist\CrystalMix-Setup-x64.exe'
+if (Test-Path -LiteralPath $package) { Remove-Item -LiteralPath $package -Force }
+$process = Start-Process -FilePath $iexpress -ArgumentList '/N', '/Q', '.\installer\CrystalMix.sed' -WindowStyle Hidden -Wait -PassThru
+if ($process.ExitCode -ne 0 -or -not (Test-Path -LiteralPath $package)) { throw 'IExpress packaging failed.' }
+Copy-Item -LiteralPath $package -Destination (Join-Path $projectRoot 'CrystalMix-Setup-x64.exe') -Force
+Get-FileHash -LiteralPath $package -Algorithm SHA256 |
+    Format-List | Out-File (Join-Path $projectRoot 'dist\SHA256.txt') -Encoding utf8
 
 Write-Host ''
 Write-Host 'Release artifacts:' -ForegroundColor Green

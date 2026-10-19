@@ -4,7 +4,7 @@ SEDVersion=3
 
 [Options]
 PackagePurpose=InstallApp
-ShowInstallProgramWindow=1
+ShowInstallProgramWindow=0
 HideExtractAnimation=0
 UseLongFileName=1
 InsideCompressed=0
@@ -23,9 +23,9 @@ UserQuietInstCmd=%UserQuietInstCmd%
 SourceFiles=SourceFiles
 
 [Strings]
-InstallPrompt=Install CrystalMix? / 是否安装 CrystalMix？
+InstallPrompt=
 DisplayLicense=
-FinishMessage=CrystalMix installation is complete. / CrystalMix 安装完成。
+FinishMessage=
 TargetName=dist\CrystalMix-Setup-x64.exe
 FriendlyName=CrystalMix 1.0.0 Installer
 AppLaunched=cmd.exe /c Install.cmd

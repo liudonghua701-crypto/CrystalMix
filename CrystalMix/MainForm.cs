@@ -5,7 +5,7 @@ using CrystalMix.Chemistry;
 
 namespace CrystalMix;
 
-public sealed class MainForm : Form
+public sealed partial class MainForm : Form
 {
     private static readonly Color Ink = Color.FromArgb(28, 43, 56);
     private static readonly Color Muted = Color.FromArgb(94, 108, 120);
@@ -37,35 +37,42 @@ public sealed class MainForm : Form
 
     public MainForm()
     {
-        AutoScaleMode = AutoScaleMode.Dpi;
+        AutoScaleMode = AutoScaleMode.Font;
         Font = new Font("Segoe UI", 10F);
         Text = "CrystalMix";
-        MinimumSize = new Size(940, 600);
+        MinimumSize = new Size(760, 620);
+        AutoScroll = true;
         StartPosition = FormStartPosition.CenterScreen;
-        Size = new Size(1180, 720);
+        Size = new Size(1180, 900);
         BackColor = Surface;
 
         var root = new TableLayoutPanel
         {
             Dock = DockStyle.Fill,
+            AutoSize = true,
+            AutoSizeMode = AutoSizeMode.GrowAndShrink,
             ColumnCount = 1,
-            RowCount = 5,
+            RowCount = 6,
             BackColor = Surface,
             Padding = new Padding(22, 0, 22, 0)
         };
-        root.RowStyles.Add(new RowStyle(SizeType.Absolute, 110));
-        root.RowStyles.Add(new RowStyle(SizeType.Absolute, 58));
-        root.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
-        root.RowStyles.Add(new RowStyle(SizeType.Absolute, 92));
-        root.RowStyles.Add(new RowStyle(SizeType.Absolute, 28));
+        root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        root.RowStyles.Add(new RowStyle(SizeType.Absolute, 240));
+        root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        root.Dock = DockStyle.Top;
+        root.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
         Controls.Add(root);
 
         root.Controls.Add(BuildHeader(), 0, 0);
         root.Controls.Add(BuildToolbar(), 0, 1);
         ConfigureGrid();
-        root.Controls.Add(_grid, 0, 2);
-        root.Controls.Add(BuildFooter(), 0, 3);
-        root.Controls.Add(BuildStatusStrip(), 0, 4);
+        root.Controls.Add(BuildTargetPanel(), 0, 2);
+        root.Controls.Add(_grid, 0, 3);
+        root.Controls.Add(BuildFooter(), 0, 4);
+        root.Controls.Add(BuildStatusStrip(), 0, 5);
 
         _languageCombo.SelectedIndexChanged += (_, _) =>
         {
@@ -78,12 +85,12 @@ public sealed class MainForm : Form
         _deleteButton.Click += (_, _) => RemoveSelectedRows();
         _exampleButton.Click += (_, _) => LoadExample();
         _clearButton.Click += (_, _) => ClearRecipe(confirm: true);
-        _helpButton.Click += (_, _) => MessageBox.Show(this, _localizer["helpBody"],
+        _helpButton.Click += (_, _) => MessageBox.Show(this, _localizer["helpBody"] + AdvancedHelp.Text,
             _localizer["helpTitle"], MessageBoxButtons.OK, MessageBoxIcon.Information);
         _calculateButton.Click += (_, _) => Calculate(showErrors: true);
         _copyButton.Click += (_, _) => CopyResults();
         _exportButton.Click += (_, _) => ExportResults();
-        _grid.CellEndEdit += (_, _) => Calculate(showErrors: false);
+        _grid.CellEndEdit += (_, e) => { if (e.ColumnIndex == 1) RecognizeMaterial(_grid.Rows[e.RowIndex]); Calculate(showErrors: false); };
         _grid.RowsRemoved += (_, _) => InvalidateResults();
         _totalMassText.TextChanged += (_, _) => InvalidateResults();
         KeyPreview = true;
@@ -96,42 +103,28 @@ public sealed class MainForm : Form
 
     private Control BuildHeader()
     {
-        var panel = new Panel { Dock = DockStyle.Fill, BackColor = Surface };
-        _titleLabel.AutoSize = true;
-        _titleLabel.Font = new Font("Segoe UI Semibold", 23F, FontStyle.Bold);
-        _titleLabel.ForeColor = Ink;
-        _titleLabel.Location = new Point(0, 20);
-        _taglineLabel.AutoSize = true;
-        _taglineLabel.Font = new Font("Segoe UI", 10.5F);
-        _taglineLabel.ForeColor = Muted;
-        _taglineLabel.Location = new Point(3, 69);
-
+        var panel = new FlowLayoutPanel { Dock = DockStyle.Fill, AutoSize = true,
+            FlowDirection = FlowDirection.TopDown, WrapContents = false, Padding = new Padding(0, 12, 0, 8) };
+        _titleLabel.AutoSize = _taglineLabel.AutoSize = _languageLabel.AutoSize = true;
+        _titleLabel.Font = new Font("Segoe UI", 20F, FontStyle.Bold);
+        _titleLabel.ForeColor = Ink; _taglineLabel.ForeColor = Muted;
         _languageCombo.DropDownStyle = ComboBoxStyle.DropDownList;
         _languageCombo.Items.AddRange(new object[] { "简体中文", "English" });
         _languageCombo.Width = 130;
-        _languageCombo.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-        _languageCombo.Location = new Point(panel.Width - 132, 50);
-        _languageLabel.AutoSize = true;
-        _languageLabel.ForeColor = Muted;
-        _languageLabel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-        _languageLabel.Location = new Point(panel.Width - 132, 22);
-        panel.Resize += (_, _) =>
-        {
-            _languageCombo.Left = panel.ClientSize.Width - _languageCombo.Width;
-            _languageLabel.Left = panel.ClientSize.Width - _languageCombo.Width;
-        };
-
-        panel.Controls.AddRange(new Control[] { _titleLabel, _taglineLabel, _languageLabel, _languageCombo });
+        var languages = new FlowLayoutPanel { AutoSize = true };
+        languages.Controls.AddRange(new Control[] { _languageLabel, _languageCombo });
+        panel.Controls.AddRange(new Control[] { _titleLabel, _taglineLabel, languages });
+        panel.SizeChanged += (_, _) => { _titleLabel.MaximumSize = _taglineLabel.MaximumSize = new Size(Math.Max(200, panel.Width - 12), 0); };
         return panel;
     }
-
     private Control BuildToolbar()
     {
         var panel = new FlowLayoutPanel
         {
             Dock = DockStyle.Fill,
             FlowDirection = FlowDirection.LeftToRight,
-            WrapContents = false,
+            WrapContents = true,
+            AutoSize = true,
             Padding = new Padding(0, 8, 0, 8),
             BackColor = Surface
         };
@@ -161,8 +154,12 @@ public sealed class MainForm : Form
         _grid.RowHeadersVisible = true;
         _grid.RowHeadersWidth = 48;
         _grid.RowTemplate.Height = 38;
+        _grid.MinimumSize = new Size(0, 180);
+        _grid.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
+        _grid.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
         _grid.ColumnHeadersHeight = 42;
-        _grid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+        _grid.ColumnHeadersDefaultCellStyle.WrapMode = DataGridViewTriState.True;
+        _grid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
         _grid.SelectionMode = DataGridViewSelectionMode.CellSelect;
         _grid.MultiSelect = true;
         _grid.EditMode = DataGridViewEditMode.EditOnKeystrokeOrF2;
@@ -200,52 +197,21 @@ public sealed class MainForm : Form
     }
 
     private static DataGridViewTextBoxColumn TextColumn(string name, float weight, bool readOnly = false) =>
-        new() { Name = name, FillWeight = weight * 100, SortMode = DataGridViewColumnSortMode.NotSortable, ReadOnly = readOnly };
+        new() { Name = name, MinimumWidth = 105, FillWeight = weight * 100, SortMode = DataGridViewColumnSortMode.NotSortable, ReadOnly = readOnly };
 
     private Control BuildFooter()
     {
-        var panel = new TableLayoutPanel
-        {
-            Dock = DockStyle.Fill,
-            ColumnCount = 8,
-            RowCount = 1,
-            Padding = new Padding(0, 20, 0, 14),
-            BackColor = Surface
-        };
-        panel.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
-        panel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 150));
-        panel.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
-        panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
-        panel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 126));
-        panel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 126));
-        panel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 158));
-        panel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 0));
-        _totalMassLabel.AutoSize = true;
-        _totalMassLabel.Anchor = AnchorStyles.Left;
-        _totalMassLabel.Font = new Font("Segoe UI Semibold", 10F);
-        _totalMassLabel.Margin = new Padding(0, 0, 12, 0);
-        _totalMassText.Dock = DockStyle.Fill;
-        _totalMassText.Text = "10";
+        var panel = new FlowLayoutPanel { Dock = DockStyle.Fill, AutoSize = true,
+            WrapContents = true, Padding = new Padding(0, 10, 0, 10), BackColor = Surface };
+        _totalMassLabel.AutoSize = _gramsLabel.AutoSize = true;
+        _totalMassLabel.Anchor = _gramsLabel.Anchor = AnchorStyles.Left;
+        _totalMassText.Text = "10"; _totalMassText.Width = 140;
         _totalMassText.TextAlign = HorizontalAlignment.Right;
-        _totalMassText.Font = new Font("Segoe UI Semibold", 11F);
-        _totalMassText.Margin = new Padding(0, 3, 8, 3);
-        _gramsLabel.AutoSize = true;
-        _gramsLabel.Anchor = AnchorStyles.Left;
-        _gramsLabel.ForeColor = Muted;
-        _gramsLabel.Margin = new Padding(0, 0, 10, 0);
-        StyleButton(_copyButton);
-        StyleButton(_exportButton);
-        StyleButton(_calculateButton, primary: true);
-        _copyButton.Dock = _exportButton.Dock = _calculateButton.Dock = DockStyle.Fill;
-        panel.Controls.Add(_totalMassLabel, 0, 0);
-        panel.Controls.Add(_totalMassText, 1, 0);
-        panel.Controls.Add(_gramsLabel, 2, 0);
-        panel.Controls.Add(_copyButton, 4, 0);
-        panel.Controls.Add(_exportButton, 5, 0);
-        panel.Controls.Add(_calculateButton, 6, 0);
+        StyleButton(_copyButton); StyleButton(_exportButton); StyleButton(_calculateButton, true);
+        panel.Controls.AddRange(new Control[] { _totalMassLabel, _totalMassText, _gramsLabel,
+            _copyButton, _exportButton, _calculateButton });
         return panel;
     }
-
     private Control BuildStatusStrip()
     {
         var strip = new StatusStrip
@@ -264,7 +230,10 @@ public sealed class MainForm : Form
 
     private static void StyleButton(Button button, bool primary = false)
     {
-        button.Height = 38;
+        button.AutoSize = true;
+        button.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+        button.MinimumSize = new Size(90, 38);
+        button.Padding = new Padding(8, 6, 8, 6);
         button.Margin = new Padding(0, 0, 10, 0);
         button.FlatStyle = FlatStyle.Flat;
         button.FlatAppearance.BorderSize = 1;
@@ -402,7 +371,12 @@ public sealed class MainForm : Form
         if (hasError)
             return ReportError(_localizer["fixRows"], showErrors);
 
-        var results = RecipeCalculator.Calculate(inputs, totalMass);
+        IReadOnlyList<RecipeResult> results;
+        try { results = RecipeCalculator.Calculate(inputs, totalMass); }
+        catch (ArgumentOutOfRangeException)
+        {
+            return ReportError("数值过大或过小，请调整摩尔份数 / Numerical range exceeded; rescale molar parts.", showErrors);
+        }
         for (var i = 0; i < results.Count; i++)
         {
             var row = dataRows[i];

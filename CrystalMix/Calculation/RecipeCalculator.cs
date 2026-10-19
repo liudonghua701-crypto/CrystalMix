@@ -27,6 +27,7 @@ public static class RecipeCalculator
         }).ToList();
 
         var sum = parsed.Sum(x => x.RelativeMass);
+        if (!double.IsFinite(sum) || sum <= 0) throw new ArgumentOutOfRangeException(nameof(inputs));
         return parsed.Select(x =>
         {
             var fraction = x.RelativeMass / sum;

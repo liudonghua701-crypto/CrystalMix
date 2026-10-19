@@ -6,9 +6,10 @@ public sealed record FormulaResult(double MolarMass, IReadOnlyDictionary<string,
 
 public static class FormulaParser
 {
-    public static FormulaResult Parse(string? formula)
+    public static FormulaResult Parse(string? formula, bool allowZero = false)
     {
         var source = (formula ?? string.Empty).Trim().Replace(" ", string.Empty);
+        if (source.Length > 4096) throw new FormulaException("badNumber", 0);
         if (source.Length == 0)
             throw new FormulaException("empty", 0);
 
@@ -20,7 +21,7 @@ public static class FormulaParser
             if (segment.Length == 0)
                 throw new FormulaException("unexpected", sourceOffset);
 
-            var reader = new Reader(segment, sourceOffset);
+            var reader = new Reader(segment, sourceOffset, allowZero);
             var leadingMultiplier = reader.ReadOptionalNumber(1d);
             if (leadingMultiplier <= 0)
                 throw new FormulaException("badNumber", sourceOffset);
@@ -35,14 +36,17 @@ public static class FormulaParser
             sourceOffset += segment.Length + 1;
         }
 
+        foreach (var key in total.Where(p => p.Value == 0).Select(p => p.Key).ToArray()) total.Remove(key);
         double mass = 0;
         foreach (var pair in total)
         {
-            if (!PeriodicTable.TryGetAtomicWeight(pair.Key, out var atomicWeight))
+            if (!AtomicSpecies.TryGetMass(pair.Key, out var atomicWeight))
                 throw new FormulaException("unknownElement", 0, pair.Key);
             mass += atomicWeight * pair.Value;
         }
 
+        if (!double.IsFinite(mass) || mass <= 0 || total.Values.Any(v => !double.IsFinite(v)))
+            throw new FormulaException("badNumber", 0);
         return new FormulaResult(mass, total);
     }
 
@@ -61,10 +65,12 @@ public static class FormulaParser
         private readonly string _text;
         private readonly int _offset;
         private int _index;
+        private readonly bool _allowZero;
 
-        public Reader(string text, int offset)
+        public Reader(string text, int offset, bool allowZero)
         {
             _text = text;
+            _allowZero = allowZero;
             _offset = offset;
         }
 
@@ -72,8 +78,9 @@ public static class FormulaParser
         public char Current => AtEnd ? '\0' : _text[_index];
         public int AbsolutePosition => _offset + _index;
 
-        public Dictionary<string, double> ParseGroup(char? expectedCloser)
+        public Dictionary<string, double> ParseGroup(char? expectedCloser, int depth = 0)
         {
+            if (depth > 32) throw new FormulaException("badNumber", AbsolutePosition);
             var result = new Dictionary<string, double>(StringComparer.Ordinal);
             while (!AtEnd)
             {
@@ -86,11 +93,25 @@ public static class FormulaParser
                     return result;
                 }
 
+                if (c == '[' && _index + 1 < _text.Length && char.IsDigit(_text[_index + 1]))
+                {
+                    var end = _text.IndexOf(']', _index);
+                    if (end < 0) throw new FormulaException("missingBracket", AbsolutePosition, "]");
+                    var species = _text[_index..(end + 1)];
+                    if (!AtomicSpecies.TryGetMass(species, out _))
+                        throw new FormulaException("unknownElement", AbsolutePosition, species);
+                    _index = end + 1;
+                    var amount = ReadOptionalNumber(1d);
+                    ValidateMultiplier(amount);
+                    result[species] = result.GetValueOrDefault(species) + amount;
+                    continue;
+                }
                 if (c is '(' or '[')
                 {
                     _index++;
                     var closer = c == '(' ? ')' : ']';
-                    var inner = ParseGroup(closer);
+                    var inner = ParseGroup(closer, depth + 1);
+                    if (inner.Count == 0) throw new FormulaException("empty", AbsolutePosition);
                     var multiplier = ReadOptionalNumber(1d);
                     ValidateMultiplier(multiplier);
                     Merge(result, inner, multiplier);
@@ -143,7 +164,7 @@ public static class FormulaParser
 
         private void ValidateMultiplier(double value)
         {
-            if (!double.IsFinite(value) || value <= 0)
+            if (!double.IsFinite(value) || value < 0 || (!_allowZero && value == 0))
                 throw new FormulaException("badNumber", AbsolutePosition);
         }
     }

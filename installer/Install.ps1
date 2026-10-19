@@ -1,4 +1,8 @@
-$ErrorActionPreference = 'Stop'
+﻿$ErrorActionPreference = 'Stop'
+# IExpress 只使用 ASCII；双语弹窗交由读取 UTF-8 BOM 的 PowerShell 显示。
+$answer = (New-Object -ComObject WScript.Shell).Popup(
+    '是否安装 CrystalMix？ / Install CrystalMix?', 0, 'CrystalMix', 4 + 32)
+if ($answer -ne 6) { exit 0 }
 
 $appName = 'CrystalMix'
 $installDir = Join-Path $env:LOCALAPPDATA 'Programs\CrystalMix'
@@ -47,3 +51,4 @@ foreach ($entry in $values.GetEnumerator()) {
 }
 
 Start-Process -FilePath $targetExe
+(New-Object -ComObject WScript.Shell).Popup('CrystalMix 安装完成。 / Installation complete.', 0, 'CrystalMix', 64) | Out-Null

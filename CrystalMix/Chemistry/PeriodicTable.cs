@@ -2,8 +2,8 @@ namespace CrystalMix.Chemistry;
 
 public static class PeriodicTable
 {
-    // Conventional standard atomic weights. Radioactive elements use a
-    // representative isotope mass number, as customary in periodic tables.
+    // 常规标准原子量；无标准原子量的放射性元素采用代表性同位素质量数。
+    // 指定同位素的精确质量由 AtomicSpecies 单独提供。
     private static readonly IReadOnlyDictionary<string, double> Weights =
         new Dictionary<string, double>(StringComparer.Ordinal)
         {
