@@ -1,0 +1,8 @@
+.tools/
+**/bin/
+**/obj/
+dist/
+CrystalMix-Setup-x64.exe
+*.user
+*.suo
+*.tmp

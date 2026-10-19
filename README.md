@@ -1,0 +1,58 @@
+# CrystalMix 晶体配料计算器
+
+CrystalMix 是一个面向晶体生长实验的 Windows 桌面应用。它把任意原料摩尔比换算为质量比，并按照给定的原料总质量计算每种原料的称量质量。界面支持简体中文与英语即时切换。
+
+CrystalMix is a bilingual Windows desktop application for converting arbitrary molar ratios into raw-material mass fractions and weighing masses for a specified total batch mass.
+
+## 主要功能 / Features
+
+- 任意数量的元素单质或化合物，以及任意正数摩尔份数
+- 自动计算摩尔质量、质量占比和每种原料所需质量
+- 支持括号、嵌套括号、小数化学计量数和结晶水
+- 表格内错误定位、结果复制和 UTF-8 CSV 导出
+- 中文/英语界面切换
+- x64 自包含发布，目标电脑无需预装 .NET
+- 单文件安装程序、桌面与开始菜单快捷方式、标准卸载入口
+
+## 使用方法 / Usage
+
+1. 每行输入一种原料的名称（可选）、化学式和摩尔份数。
+2. 输入原料总质量，单位为克。
+3. 点击“计算配比”。质量占比按 `摩尔份数 × 摩尔质量` 归一化。
+4. 可复制结果，或导出 CSV 用于实验记录。
+
+Enter one material per row, provide its formula and molar parts, set the total mass in grams, and select **Calculate recipe**. CrystalMix normalizes each `molar parts × molar mass` contribution.
+
+支持的例子：`Fe`、`FeSe`、`Ca(OH)2`、`K4[Fe(CN)6]`、`Fe1.03Te`、`CuSO4·5H2O`。元素符号区分大小写；结晶水请使用中点 `·`，句点 `.` 用作小数点。
+
+Supported examples: `Fe`, `FeSe`, `Ca(OH)2`, `K4[Fe(CN)6]`, `Fe1.03Te`, and `CuSO4·5H2O`. Element symbols are case-sensitive. Use a middle dot `·` for hydrates; the period `.` is reserved as a decimal point.
+
+## 安装与分发 / Install and distribute
+
+直接运行 `dist\CrystalMix-Setup-x64.exe`。安装仅作用于当前 Windows 用户，无需管理员权限。安装程序会创建快捷方式，并在 Windows“已安装的应用”中注册卸载入口。
+
+Run `dist\CrystalMix-Setup-x64.exe`. Installation is per-user and does not require administrator privileges.
+
+## 从源码构建 / Build from source
+
+需要 Windows 和 .NET 8 SDK。在 PowerShell 中运行：
+
+```powershell
+.\build-release.ps1
+```
+
+测试项目不依赖第三方测试框架：
+
+```powershell
+dotnet run --project .\CrystalMix.Tests\CrystalMix.Tests.csproj -c Release --configfile .\NuGet.Config
+```
+
+## 科学说明 / Scientific note
+
+原子量采用常规标准原子量；放射性元素使用周期表常用的代表同位素质量数。软件计算的是理论配比，不会自动修正原料纯度、氧化、吸湿、挥发损失或同位素富集。高精度实验应根据原料证书和具体生长方案修正。
+
+Atomic weights are conventional standard values; radioactive elements use representative isotope mass numbers. Results are theoretical and do not automatically correct for purity, oxidation, moisture, volatilization, or isotope enrichment.
+
+## License
+
+MIT License. See [LICENSE](LICENSE).
