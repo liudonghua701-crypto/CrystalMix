@@ -90,3 +90,5 @@ The installer lets you enter or browse for a dedicated installation folder. Exis
 维护人员可从已解包的负载运行 `Install.ps1 -InstallDir "E:\Apps\CrystalMix" -Unattended -NoLaunch`。安装器回归测试为 `test-installer.ps1`，会在项目内进行真实安装和卸载，并在 finally 中恢复原有注册信息与快捷方式；`test-install-dialog.ps1` 验证路径输入界面，`test-uninstall-entry.ps1` 验证当前卸载入口并取消，不删除现有安装。
 
 独立 Git for Windows 已安装；仓库及全部提交仍位于 E 盘当前项目的 `.git` 中。可使用 `git status` 和 `git log --oneline` 查看状态与历史。
+
+路径选择修复：点击“浏览”选择 D 盘等磁盘根目录时，会自动填写专用子目录（例如 `D:\CrystalMix`）；取消浏览保留原路径。已修复 PowerShell 自动变量 `$input` 与文本框变量冲突造成的 `Text` 属性错误。`test-install-browse.ps1` 覆盖真实浏览按钮的确认与取消；可运行 `test-installer.ps1 -TestBase 'D:\CrystalMix-Validation'` 复测 D 盘实际安装和卸载。

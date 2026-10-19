@@ -1,7 +1,10 @@
-﻿$ErrorActionPreference = 'Stop'
+﻿param([string]$TestBase)
+$ErrorActionPreference = 'Stop'
 $root = $PSScriptRoot
 . (Join-Path $root 'installer\InstallSupport.ps1')
-$testRoot = Join-Path $root ('.tools\installer-test-' + [Guid]::NewGuid().ToString('N'))
+if (-not $TestBase) { $TestBase = Join-Path $root '.tools' }
+$testRoot = Join-Path $TestBase ('installer-test-' + [Guid]::NewGuid().ToString('N'))
+Write-Output ('Test workspace: ' + $testRoot)
 $payload = Join-Path $testRoot 'payload'
 New-Item -ItemType Directory -Path $payload -Force | Out-Null
 Copy-Item -LiteralPath (Join-Path $root 'dist\publish\CrystalMix.exe') -Destination $payload

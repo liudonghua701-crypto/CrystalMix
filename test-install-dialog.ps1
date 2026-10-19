@@ -11,9 +11,9 @@ $timer.Add_Tick({
         $form = [Windows.Forms.Application]::OpenForms | Where-Object { $_.Text -like 'CrystalMix 安装位置*' } | Select-Object -First 1
         if (-not $form) { throw 'Folder dialog not found' }
         $panel = $form.Controls[0]
-        $input = $panel.Controls | Where-Object { $_ -is [Windows.Forms.TextBox] } | Select-Object -First 1
-        if (-not $input) { throw 'Path input missing' }
-        $input.Text = $script:chosen
+        $pathTextBox = $panel.Controls | Where-Object { $_ -is [Windows.Forms.TextBox] } | Select-Object -First 1
+        if (-not $pathTextBox) { throw 'Path input missing' }
+        $pathTextBox.Text = $script:chosen
         $bitmap = New-Object Drawing.Bitmap($form.Width, $form.Height)
         try {
             $form.DrawToBitmap($bitmap, (New-Object Drawing.Rectangle(0,0,$form.Width,$form.Height)))

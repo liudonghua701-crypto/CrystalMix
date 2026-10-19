@@ -35,8 +35,9 @@ function Select-CrystalMixFolder([string]$DefaultPath) {
     $label = New-Object Windows.Forms.Label
     $label.Text = "请选择专用安装文件夹，可直接输入完整路径。`nChoose a dedicated installation folder or enter its full path."
     $label.AutoSize = $true; $label.Dock = 'Fill'
-    $input = New-Object Windows.Forms.TextBox
-    $input.Text = $DefaultPath; $input.Dock = 'Top'
+    # $input 是 PowerShell 自动变量，不能用作事件回调中的控件变量。
+    $pathTextBox = New-Object Windows.Forms.TextBox
+    $pathTextBox.Text = $DefaultPath; $pathTextBox.Dock = 'Top'
     $buttons = New-Object Windows.Forms.FlowLayoutPanel
     $buttons.AutoSize = $true; $buttons.Dock = 'Fill'
     $browse = New-Object Windows.Forms.Button
@@ -44,17 +45,26 @@ function Select-CrystalMixFolder([string]$DefaultPath) {
     $browse.Add_Click({
         $dialog = New-Object Windows.Forms.FolderBrowserDialog
         $dialog.Description = '选择 CrystalMix 专用文件夹 / Select a dedicated CrystalMix folder'
-        $dialog.SelectedPath = $input.Text
-        try { if ($dialog.ShowDialog($form) -eq 'OK') { $input.Text = $dialog.SelectedPath } }
+        $dialog.SelectedPath = $pathTextBox.Text
+        try {
+            if ($dialog.ShowDialog($form) -eq 'OK') {
+                $selectedPath = $dialog.SelectedPath
+                # 选择磁盘时使用专用子目录，避免把程序文件散放到根目录。
+                if ($selectedPath.TrimEnd('\') -eq [IO.Path]::GetPathRoot($selectedPath).TrimEnd('\')) {
+                    $selectedPath = Join-Path $selectedPath 'CrystalMix'
+                }
+                $pathTextBox.Text = $selectedPath
+            }
+        }
         finally { $dialog.Dispose() }
-    })
+    }.GetNewClosure())
     $ok = New-Object Windows.Forms.Button
     $ok.Text = '安装 / Install'; $ok.AutoSize = $true; $ok.DialogResult = 'OK'
     $cancel = New-Object Windows.Forms.Button
     $cancel.Text = '取消 / Cancel'; $cancel.AutoSize = $true; $cancel.DialogResult = 'Cancel'
     $buttons.Controls.AddRange(@($browse, $ok, $cancel))
-    $panel.Controls.Add($label); $panel.Controls.Add($input); $panel.Controls.Add($buttons)
+    $panel.Controls.Add($label); $panel.Controls.Add($pathTextBox); $panel.Controls.Add($buttons)
     $form.Controls.Add($panel); $form.AcceptButton = $ok; $form.CancelButton = $cancel
-    try { if ($form.ShowDialog() -eq 'OK') { return $input.Text }; return $null }
+    try { if ($form.ShowDialog() -eq 'OK') { return $pathTextBox.Text }; return $null }
     finally { $form.Dispose() }
 }
