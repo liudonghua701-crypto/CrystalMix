@@ -14,6 +14,7 @@ public sealed class IsotopeBrowser : Form
     public IsotopeBrowser()
     {
         Text = "同位素库 / Isotope catalog"; Size = new Size(1120, 680); MinimumSize = new Size(820, 500);
+        Icon = AppIcon.Load();
         Font = new Font("Segoe UI", 10); AutoScaleMode = AutoScaleMode.Font; StartPosition = FormStartPosition.CenterParent;
         var layout = new TableLayoutPanel { ColumnCount = 1, RowCount = 4, Padding = new Padding(12) };
         layout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));

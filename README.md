@@ -1,96 +1,143 @@
-# CrystalMix 晶体配料计算器
+<p align="center"><img src="CrystalMix/Assets/CrystalMix.png" width="128" alt="CrystalMix crystal icon"></p>
 
-CrystalMix 是一个面向晶体生长实验的 Windows 桌面应用。它把任意原料摩尔比换算为质量比，并按照给定的原料总质量计算每种原料的称量质量。界面支持简体中文与英语即时切换。
+# CrystalMix
 
-CrystalMix is a bilingual Windows desktop application for converting arbitrary molar ratios into raw-material mass fractions and weighing masses for a specified total batch mass.
+**A Windows desktop calculator for crystal-growth material ratios, isotope-aware compositions, and weighing plans.**
 
-## 主要功能 / Features
+CrystalMix converts user-selected raw materials and molar parts into molar masses, mass fractions, and weighing masses for a specified batch. It also evaluates target compositions and checks whether a selected precursor basis can reproduce them. The interface offers Chinese and English; the Help window follows the selected language.
 
-- 任意数量的元素单质或化合物，以及任意正数摩尔份数
-- 自动计算摩尔质量、质量占比和每种原料所需质量
-- 支持括号、嵌套括号、小数化学计量数和结晶水
-- 表格内错误定位、结果复制和 UTF-8 CSV 导出
-- 中文/英语界面切换
-- x64 自包含发布，目标电脑无需预装 .NET
-- 单文件安装程序、桌面与开始菜单快捷方式、标准卸载入口
+## Download and install
 
-## 使用方法 / Usage
+**[Download the Windows x64 installer](https://github.com/liudonghua701-crypto/CrystalMix/releases/latest/download/CrystalMix-Setup-x64.exe)** · [All releases](https://github.com/liudonghua701-crypto/CrystalMix/releases) · [Changelog](CHANGELOG.md)
 
-1. 每行输入一种原料的名称（可选）、化学式和摩尔份数。
-2. 输入原料总质量，单位为克。
-3. 点击“计算配比”。质量占比按 `摩尔份数 × 摩尔质量` 归一化。
-4. 可复制结果，或导出 CSV 用于实验记录。
+1. Download **CrystalMix-Setup-x64.exe** from the release assets.
+2. Run it, confirm installation, and choose a dedicated installation folder.
+3. Launch CrystalMix from the desktop or Start menu shortcut.
 
-Enter one material per row, provide its formula and molar parts, set the total mass in grams, and select **Calculate recipe**. CrystalMix normalizes each `molar parts × molar mass` contribution.
+The installer includes the self-contained Windows x64 application. End users do **not** need Git, the source archive, a .NET SDK, or a separately installed .NET runtime. Runtime calculations and the isotope catalog work offline. The installer itself does not download application components.
 
-支持的例子：`Fe`、`FeSe`、`Ca(OH)2`、`K4[Fe(CN)6]`、`Fe1.03Te`、`CuSO4·5H2O`。元素符号区分大小写；结晶水请使用中点 `·`，句点 `.` 用作小数点。
+Installation is per-user and does not require administrator rights when the selected folder is writable. Paths with spaces and Chinese characters are supported. Choosing a drive root in the folder browser selects a dedicated subfolder, such as `D:\CrystalMix`. Uninstall through Windows **Installed apps**. To move an existing installation, uninstall its old location before installing elsewhere. Do not manually move an installed folder.
 
-Supported examples: `Fe`, `FeSe`, `Ca(OH)2`, `K4[Fe(CN)6]`, `Fe1.03Te`, and `CuSO4·5H2O`. Element symbols are case-sensitive. Use a middle dot `·` for hydrates; the period `.` is reserved as a decimal point.
+The package is currently unsigned; Windows may display a publisher or reputation prompt. Published SHA-256 checksums identify the exact release files. The tested target is Windows x64; ARM-native and non-Windows builds are not provided.
 
-## 安装与分发 / Install and distribute
+## Features
 
-直接运行 `dist\CrystalMix-Setup-x64.exe`。安装仅作用于当前 Windows 用户，无需管理员权限。安装程序会创建快捷方式，并在 Windows“已安装的应用”中注册卸载入口。
+- Convert any positive molar parts into normalized mass fractions and batch weighing masses.
+- Recognize all 118 element symbols and provide Chinese/English element names.
+- Parse elements, compounds, decimal stoichiometry, nested groups, and hydrate middle dots.
+- Calculate specified isotopes in elemental materials and compounds, retaining isotope identity throughout composition calculations.
+- Search an embedded catalog of **3,498 records** spanning 118 element symbols: 3,486 ground-state mass entries and 12 long-lived isomers.
+- Default to **stable nuclides plus half-lives of at least one year**; switch to stable-only or all available records. The current default subset has 407 records.
+- Evaluate variable target formulas such as `Ba1-xKxFe2As2`, with `0 <= x <= 1`.
+- Suggest elemental amounts or balance a user-selected, independent precursor basis; explain inconsistent element constraints.
+- Keep the target composition separate from the editable raw-material table.
+- Copy calculated results and export UTF-8 CSV files.
+- Adapt table headers, controls, and scrolling to window size and font scaling.
+- Provide a scrollable Help window in the selected language and a multi-resolution application icon.
 
-Run `dist\CrystalMix-Setup-x64.exe`. Installation is per-user and does not require administrator privileges.
+## Quick start
 
-## 从源码构建 / Build from source
+1. Enter one actual material formula and its molar parts per row. A custom material name is optional.
+2. Set **Total batch mass** in grams.
+3. Select **Calculate recipe**. Each contribution is `molar parts × molar mass`; CrystalMix normalizes the contributions and allocates the batch mass.
+4. Use **Copy results** or **Export CSV** after a successful calculation.
 
-需要 Windows 和 .NET 8 SDK。在 PowerShell 中运行：
+Molar parts are relative amounts; they do not need to sum to one. For example, Fe:Se parts of 1:1 mean equal mole amounts, not equal masses.
+
+| Input | Meaning |
+| --- | --- |
+| `Fe`, `FeSe` | Element or compound |
+| `Ca(OH)2`, `K4[Fe(CN)6]` | Grouped and nested composition |
+| `Fe1.03Te` | Decimal stoichiometry |
+| `CuSO4·5H2O` | Hydrate; use the middle dot `·` |
+| `[175Lu]`, `[175Lu]2O3` | Specified isotope, alone or in a compound |
+| `[180mTa]`, `[178m2Hf]` | Explicit nuclear isomer |
+
+Element symbols are case-sensitive. The period `.` is a decimal point, not a hydrate separator. Unsupported nuclides and malformed formulas are rejected rather than silently approximated.
+
+## Targets, precursors, and variables
+
+Enter a target such as `Ba1-xKxFe2As2`, set `x = 0.4`, and optionally specify the actual materials. A blank material basis suggests elemental amounts. For the same target:
+
+| Selected materials, in order | Suggested molar parts |
+| --- | --- |
+| `BaFe2As2, KFe2As2` | `0.6 : 0.4` |
+| `BaAs, Fe2As, KAs` | `0.6 : 1 : 0.4` |
+
+These are composition balances, **not unique synthesis recipes**. The solver requires an independent basis and a nonnegative exact solution; dependent, incompatible, or negative-use solutions are rejected.
+
+For `Ba1-xKxFeAs`, the same three arsenides cannot balance. Matching Ba, Fe and K forces parts `(1-x):0.5:x`, which supply **1.5 As** per target unit instead of **1 As**. CrystalMix reports the element constraint rather than changing your target formula.
+
+Use braces for more complex subscripts: `Ba{1-x}K{x}Fe2As2`, `Fe{(1+x)/2}` or `[175Lu]{1-x}[176Lu]{x}O`. Arithmetic supports `+`, `-`, `*`, `/` and parentheses. Zero target components are omitted; invalid or nonfinite expressions are rejected.
+
+Changing the target, variable value, or selected basis refills the material table. You can then freely edit material formulas and molar parts without changing the target composition. Invalid target input preserves the previously entered table.
+
+## Isotope data and scientific scope
+
+Open **Isotopes** to search by symbol, Chinese/English element name, or bracket syntax, inspect masses and half-lives, and add a selected record. Ordinary `Lu` uses the existing conventional atomic weight; `[175Lu]` uses its specified isotope mass. Mixed ordinary and isotope species remain distinct.
+
+Mass records come from NIST, supplemented by IAEA/AME2020; ground-state lifetime metadata comes from IAEA/ENSDF, with long-lived isomers from NUBASE2020. Estimated masses and lifetime bounds remain identified. See [Isotope data and reproducibility](ISOTOPE-DATA.md) for coverage, units, source snapshots, and import rules.
+
+Coverage of 118 elements does not imply that every element has a stable isotope. The catalog is a dated data snapshot, not a claim to include every nuclear excited state. Nuclear lifetime does not establish chemical stability. Ta-180 and Ta-180m are separate entries.
+
+Calculations use neutral-atom masses and theoretical stoichiometry. They do not automatically account for purity, isotope-enrichment fractions, oxidation, moisture, volatilization, flux, byproducts, reaction yield, or source-data uncertainty. A stoichiometric solution does not establish reaction feasibility.
+
+## Build from source
+
+Requirements: Windows x64, PowerShell 5.1, and the **.NET 8 SDK**. Git is optional if using the source ZIP. Windows IExpress, used to assemble the installer, is expected at `%WINDIR%\System32\iexpress.exe`.
 
 ```powershell
+git clone https://github.com/liudonghua701-crypto/CrystalMix.git
+cd CrystalMix
 .\build-release.ps1
 ```
 
-测试项目不依赖第三方测试框架：
+The script restores/builds the project, runs core tests, verifies installer encodings, publishes a self-contained `win-x64` executable, and creates the single-file installer. A first source build needs access to the .NET restore feeds unless the required packs are already cached. Output:
+
+- `dist/publish/CrystalMix.exe`: self-contained application.
+- `dist/CrystalMix-Setup-x64.exe`: installer, also copied to the project root.
+- `dist/SHA256.txt`: installer checksum.
+
+Build scripts prefer `.tools/dotnet/dotnet.exe` when present, otherwise `dotnet` from PATH. Local tool caches and build outputs are excluded from Git and the source ZIP. The project has no third-party test-framework dependency.
+
+## Tests and release checks
 
 ```powershell
-dotnet run --project .\CrystalMix.Tests\CrystalMix.Tests.csproj -c Release --configfile .\NuGet.Config
+dotnet run --project CrystalMix.Tests -c Release
+# Requires an interactive Windows desktop:
+dotnet run --project CrystalMix.Tests -c Release -- --ui
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\smoke-release.ps1
 ```
 
-## 科学说明 / Scientific note
+Tests cover element names, ordinary formulas, all catalog isotope formulas and compounds, isomers, variable expressions, multiple doping values, rejected input, total mass closure, balance conflicts, and parser regressions. UI checks exercise target editing, language-specific help, font scaling, and isotope selection. Screenshots are saved under `dist/ui-checks`. Font-size simulations do not replace testing every physical monitor/DPI combination.
 
-原子量采用常规标准原子量；放射性元素使用周期表常用的代表同位素质量数。软件计算的是理论配比，不会自动修正原料纯度、氧化、吸湿、挥发损失或同位素富集。高精度实验应根据原料证书和具体生长方案修正。
+The release smoke check extracts the package, verifies all six payload files, starts and cleanly closes the application, and checks the Chinese installer prompt before cancelling. It does not replace an existing installation.
 
-Atomic weights are conventional standard values; radioactive elements use representative isotope mass numbers. Results are theoretical and do not automatically correct for purity, oxidation, moisture, volatilization, or isotope enrichment.
+Installer-specific checks are available in `test-installer.ps1`, `test-install-dialog.ps1`, `test-install-browse.ps1`, and `test-uninstall-entry.ps1`. The full installer regression performs actual installation/uninstallation in a test location and restores previously registered information in its cleanup block. Run it only when intentionally testing those changes.
+
+## Project layout
+
+| Path | Purpose |
+| --- | --- |
+| `CrystalMix/` | Windows Forms application, chemistry model, calculations and localization |
+| `CrystalMix/Assets/` | Editable SVG, PNG preview and multi-resolution ICO |
+| `CrystalMix/Data/isotopes.json` | Embedded, offline isotope snapshot |
+| `CrystalMix.Tests/` | Calculation, localization and desktop UI checks |
+| `installer/` | Install/uninstall scripts and IExpress configuration |
+| `tools/` | Reproducible icon generation and isotope import |
+| `data-sources/` | Archived source data and checksum manifest |
+| `build-release.ps1` | Test, publish and package pipeline |
+
+The release source ZIP contains tracked engineering files, including test code, installer scripts, original icon assets and source-data snapshots. It excludes `.git`, credentials, development tool caches, and generated binaries. Clone the repository if you need commit history; download the installer if you only want to use the application.
+
+## Maintenance and release history
+
+See [CHANGELOG.md](CHANGELOG.md) for version 1.1.0 and the earlier commit-by-commit development history. Earlier validation reports are historical snapshots, not claims about the current installer checksum. Release assets include checksums for the current installer and source archive.
+
+Rebuild the icon with `powershell.exe -File tools/build-icon.ps1`. Recreate the isotope JSON with `powershell.exe -File tools/import-isotopes.ps1`; the importer verifies the archived source hashes and uses a fixed PowerShell serialization runtime.
+
+Source files and documentation use UTF-8. Installer PowerShell scripts use UTF-8 BOM for Windows PowerShell; CMD launchers and IExpress configuration remain ASCII. Installation/uninstallation text is handled as Unicode. Uninstallation validates the registered folder and preserves unrelated user files; locked files cause a recoverable error instead of silently deleting the uninstall entry.
 
 ## License
 
-MIT License. See [LICENSE](LICENSE).
-
-## 目标组成、同位素与掺杂 / Targets, isotopes and doping
-
-- 输入元素符号后显示中英文名称；化合物单元格的提示列出所含元素。
-- 同位素采用 `[质量数元素符号]`，例如 `[57Fe]`、`[57Fe]2O3`、`[2H]2O`。普通 Fe 与指定的 `[57Fe]` 在组成中分别保留。
-- 核素库收录 3,498 条记录，覆盖 118 种元素。点击“同位素库 / Isotopes”，默认显示稳定核素及半衰期至少 1 年的核素；可切换全部、搜索中文/英文/符号，并将选中核素加入原料。核异构体示例：`[180mTa]`、`[178m2Hf]`。未收录核素明确报错；来源、估算标记和覆盖范围见 [核素数据说明](ISOTOPE-DATA.md)。
-- 目标栏支持 `Ba1-xKxFe2As2`，x 在 0–1 之间。复杂下标使用花括号，如 `Ba{1-x}K{x}Fe2As2`；支持加减乘除与括号，例如 `Fe{(1+x)/2}`，乘法须写 `*`。
-- 目标、x 或选用原料改变后，延迟约 0.65 秒自动求值并重新填写表格；非法目标不会覆盖原料表。表格可自由编辑，修改表格不会反向修改目标。
-- “选用原料”留空时，建议按元素或核素组成填写。也可输入逗号分隔的母体化合物，例如 `BaFe2As2, KFe2As2`，x=0.4 时建议摩尔比为 0.6:0.4。
-- 配平只适用于用户选定的独立原料组合。无法配平、有负用量或不唯一的组合会报错。它不判断反应、挥发、助熔剂、副产物和合成路线的可行性。
-
-Use `[57Fe]` for a specified isotope and braces for arithmetic subscripts. The target composition is separate from the editable material table. A blank material basis suggests elemental amounts; a supplied precursor basis is balanced only when it has an independent, nonnegative solution. These are stoichiometric suggestions, not unique synthesis recipes. Changing target inputs refills the table.
-
-`Ba1-xKxFeAs` 无法用 `BaAs, Fe2As, KAs` 精确配平：Ba/K/Fe 要求三者摩尔比为 `(1-x):0.5:x`，带入 As 为 1.5，而目标 As 为 1。若目标是 `Ba1-xKxFe2As2`，这组三原料的元素守恒比为 `(1-x):1:x`。软件会保留用户输入，不自动替换化学式。
-
-## 验证与编码 / Validation and encoding
-
-`dotnet run --project CrystalMix.Tests -c Release -- --ui` 还会验证自动填写与中英文布局，并在 `dist/ui-checks` 保存字体缩放 100%、150%、200% 的截图。字体缩放模拟不等同于所有物理显示器 DPI 组合。
-
-源代码和说明使用 UTF-8；Windows PowerShell 脚本使用 UTF-8 BOM；IExpress 配置与 CMD 启动器保持 ASCII。中文安装和卸载弹窗由 PowerShell 的 Unicode 字符串显示，不依赖系统 ANSI 代码页。
-
-Git 仓库位于当前 E 盘项目的 `.git`；构建缓存、发布产物和截图不提交。首次提交保存开发前的代码基线。
-
-发布后可运行 `powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\smoke-release.ps1`。此检查会解包并校验全部文件、启动与正常关闭应用、验证安装确认框中文并选择“否”；不会实际安装或更改现有安装。解包目录保留在 `dist/smoke-*` 供核对。
-
-## 安装路径和卸载修复 / Installation folder and uninstall
-
-安装确认后会显示“安装位置”窗口，可直接输入完整路径或点击“浏览”。支持中文和空格路径；请选择专用文件夹，不支持磁盘根目录、安装源目录或目录链接。已有安装默认使用原目录；如需换目录，请先卸载旧版本，再运行安装包。
-
-The installer lets you enter or browse for a dedicated installation folder. Existing installations default to their current folder. Uninstall the old location before moving to another folder.
-
-卸载入口直接启动 PowerShell，不再依赖 CMD 延迟删除。卸载会校验注册目录，仅关闭该目录内的 CrystalMix 进程，只删除程序文件，保留用户文件；遇到文件占用会报错并保留入口以便重试。不要手动移动已安装目录。
-
-维护人员可从已解包的负载运行 `Install.ps1 -InstallDir "E:\Apps\CrystalMix" -Unattended -NoLaunch`。安装器回归测试为 `test-installer.ps1`，会在项目内进行真实安装和卸载，并在 finally 中恢复原有注册信息与快捷方式；`test-install-dialog.ps1` 验证路径输入界面，`test-uninstall-entry.ps1` 验证当前卸载入口并取消，不删除现有安装。
-
-独立 Git for Windows 已安装；仓库及全部提交仍位于 E 盘当前项目的 `.git` 中。可使用 `git status` 和 `git log --oneline` 查看状态与历史。
-
-路径选择修复：点击“浏览”选择 D 盘等磁盘根目录时，会自动填写专用子目录（例如 `D:\CrystalMix`）；取消浏览保留原路径。已修复 PowerShell 自动变量 `$input` 与文本框变量冲突造成的 `Text` 属性错误。`test-install-browse.ps1` 覆盖真实浏览按钮的确认与取消；可运行 `test-installer.ps1 -TestBase 'D:\CrystalMix-Validation'` 复测 D 盘实际安装和卸载。
+See [LICENSE](LICENSE). Scientific data sources retain their own provenance, documented separately in [ISOTOPE-DATA.md](ISOTOPE-DATA.md).

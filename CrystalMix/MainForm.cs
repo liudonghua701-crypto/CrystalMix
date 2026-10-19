@@ -41,6 +41,7 @@ public sealed partial class MainForm : Form
         AutoScaleMode = AutoScaleMode.Font;
         Font = new Font("Segoe UI", 10F);
         Text = "CrystalMix";
+        Icon = AppIcon.Load();
         MinimumSize = new Size(760, 620);
         AutoScroll = true;
         StartPosition = FormStartPosition.CenterScreen;
@@ -86,8 +87,7 @@ public sealed partial class MainForm : Form
         _deleteButton.Click += (_, _) => RemoveSelectedRows();
         _exampleButton.Click += (_, _) => LoadExample();
         _clearButton.Click += (_, _) => ClearRecipe(confirm: true);
-        _helpButton.Click += (_, _) => MessageBox.Show(this, _localizer["helpBody"] + AdvancedHelp.Text,
-            _localizer["helpTitle"], MessageBoxButtons.OK, MessageBoxIcon.Information);
+        _helpButton.Click += (_, _) => { using var help = new HelpDialog(_localizer); help.ShowDialog(this); };
         _calculateButton.Click += (_, _) => Calculate(showErrors: true);
         _copyButton.Click += (_, _) => CopyResults();
         _exportButton.Click += (_, _) => ExportResults();

@@ -52,7 +52,7 @@ $uninstallKey = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\Cryst
 New-Item -Path $uninstallKey -Force | Out-Null
 $values = @{
     DisplayName = 'CrystalMix Crystal Growth Ratio Calculator'
-    DisplayVersion = '1.0.0'
+    DisplayVersion = '1.1.0'
     Publisher = 'CrystalMix'
     InstallLocation = $installDir
     DisplayIcon = $targetExe

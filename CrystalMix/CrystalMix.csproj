@@ -7,7 +7,8 @@
     <Nullable>enable</Nullable>
     <AssemblyName>CrystalMix</AssemblyName>
     <RootNamespace>CrystalMix</RootNamespace>
-    <Version>1.0.0</Version>
+    <Version>1.1.0</Version>
+    <ApplicationIcon>Assets\CrystalMix.ico</ApplicationIcon>
     <Authors>CrystalMix</Authors>
     <Product>CrystalMix Crystal Growth Ratio Calculator</Product>
     <Description>Bilingual crystal growth raw-material ratio calculator.</Description>
@@ -15,5 +16,6 @@
   </PropertyGroup>
   <ItemGroup>
     <EmbeddedResource Include="Data\isotopes.json" />
+    <EmbeddedResource Include="Assets\CrystalMix.ico" />
   </ItemGroup>
 </Project>
