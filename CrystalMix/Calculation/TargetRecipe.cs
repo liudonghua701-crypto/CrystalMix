@@ -16,6 +16,8 @@ public static class TargetRecipe
         var b = species.Select(s => target.Composition.GetValueOrDefault(s)).ToArray();
         for (int r = 0; r < species.Length; r++)
             for (int c = 0; c < n; c++) a[r, c] = parsed[c].GetValueOrDefault(species[r]);
+        var conflict = BalanceDiagnostics.Find(a, b, species);
+        if (conflict is not null) throw new ArgumentException(conflict);
         var system = new double[n, n + 1];
         for (int i = 0; i < n; i++)
             for (int r = 0; r < species.Length; r++)

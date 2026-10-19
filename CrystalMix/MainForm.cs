@@ -26,6 +26,7 @@ public sealed partial class MainForm : Form
     private readonly Button _exampleButton = new();
     private readonly Button _clearButton = new();
     private readonly Button _helpButton = new();
+    private readonly Button _isotopeButton = new();
     private readonly Label _totalMassLabel = new();
     private readonly TextBox _totalMassText = new();
     private readonly Label _gramsLabel = new();
@@ -133,12 +134,19 @@ public sealed partial class MainForm : Form
         StyleButton(_exampleButton);
         StyleButton(_clearButton);
         StyleButton(_helpButton);
+        StyleButton(_isotopeButton);
+        _isotopeButton.Text = "同位素库 / Isotopes";
+        _isotopeButton.Click += (_, _) => {
+            using var catalog = new IsotopeBrowser();
+            if (catalog.ShowDialog(this) == DialogResult.OK && catalog.SelectedSpecies is string species)
+                AddMaterial(ElementNames.Get(species) ?? species, species, "1");
+        };
         _addButton.Width = 132;
         _deleteButton.Width = 122;
         _exampleButton.Width = 112;
         _clearButton.Width = 90;
         _helpButton.Width = 104;
-        panel.Controls.AddRange(new Control[] { _addButton, _deleteButton, _exampleButton, _clearButton, _helpButton });
+        panel.Controls.AddRange(new Control[] { _addButton, _deleteButton, _exampleButton, _clearButton, _helpButton, _isotopeButton });
         return panel;
     }
 

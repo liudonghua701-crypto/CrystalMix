@@ -12,7 +12,7 @@ public static class TargetFormula
         if (formula.Length > 4096) throw new FormatException("Formula too long.");
         var source = formula.Replace(" ", "");
         var evaluated = Regex.Replace(source,
-            @"(\[\d+[A-Z][a-z]?\]|[A-Z][a-wyz]?|[)\]])(\{[^{}]*\}|[0-9.x+*/-]+)", match =>
+            @"(\[\d+(?:m\d*)?[A-Z][a-z]?\]|[A-Z][a-wyz]?|[)\]])(\{[^{}]*\}|[0-9.x+*/-]+)", match =>
             {
                 var expression = match.Groups[2].Value.Trim('{', '}');
                 var count = new StoichiometryExpression(expression, x).Evaluate();

@@ -1,0 +1,20 @@
+[
+  {
+    "File": "nist-isotopes.html",
+    "Url": "https://physics.nist.gov/cgi-bin/Compositions/stand_alone.pl?all=all&ascii=ascii2&isotype=all",
+    "Retrieved": "2026-10-19",
+    "SHA256": "68A7E82EF25CAFD864AA810FF8B8A4A2EED01FDD8A805F67FEFD246811A05AE4"
+  },
+  {
+    "File": "iaea-ground-states.csv",
+    "Url": "https://nds.iaea.org/relnsd/v1/data?fields=ground_states&nuclides=all",
+    "Retrieved": "2026-10-19",
+    "SHA256": "8AEE5DC431AF1E35FCB49746387B83E927B3C300E7787DEFBDA621A08212C795"
+  },
+  {
+    "File": "nubase2020.txt",
+    "Url": "https://www-nds.iaea.org/amdc/ame2020/nubase_3.mas20.txt",
+    "Retrieved": "2026-10-19",
+    "SHA256": "87C17E1D7113C68F4FE1C65B5174F36FBC51D8DC7BEFE105F31DF0EAF97B67C4"
+  }
+]

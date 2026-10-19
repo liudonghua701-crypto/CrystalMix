@@ -107,8 +107,14 @@ var tests = new List<(string Name, Action Run)>
     })
 };
 
-if (args.Contains("--ui")) tests.Add(("UI layout and target workflow", UiChecks.Run));
+if (args.Contains("--ui")) {
+    tests.Add(("UI layout and target workflow", UiChecks.Run));
+    tests.Add(("Isotope catalog UI and selection", IsotopeUiChecks.Run));
+}
 
+tests.Add(("All 3498 nuclides: names, compounds, mass closure", IsotopeCatalogChecks.AllRecords));
+tests.Add(("Isotope filters and isomers", IsotopeCatalogChecks.Filters));
+tests.Add(("Arsenide conflict and 122 balance", IsotopeCatalogChecks.ArsenideBalance));
 var failed = 0;
 foreach (var test in tests)
 {

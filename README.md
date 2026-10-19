@@ -61,13 +61,15 @@ MIT License. See [LICENSE](LICENSE).
 
 - 输入元素符号后显示中英文名称；化合物单元格的提示列出所含元素。
 - 同位素采用 `[质量数元素符号]`，例如 `[57Fe]`、`[57Fe]2O3`、`[2H]2O`。普通 Fe 与指定的 `[57Fe]` 在组成中分别保留。
-- 当前核素库收录 H-1/2/3、B-10/11、C-12/13/14、O-16/17/18、Fe-54/56/57/58、Lu-175/176。未收录核素明确报错，不用整数质量数估算。相对质量来源：[NIST](https://physics.nist.gov/PhysRefData/Compositions/index.html)。
+- 核素库收录 3,498 条记录，覆盖 118 种元素。点击“同位素库 / Isotopes”，默认显示稳定核素及半衰期至少 1 年的核素；可切换全部、搜索中文/英文/符号，并将选中核素加入原料。核异构体示例：`[180mTa]`、`[178m2Hf]`。未收录核素明确报错；来源、估算标记和覆盖范围见 [核素数据说明](ISOTOPE-DATA.md)。
 - 目标栏支持 `Ba1-xKxFe2As2`，x 在 0–1 之间。复杂下标使用花括号，如 `Ba{1-x}K{x}Fe2As2`；支持加减乘除与括号，例如 `Fe{(1+x)/2}`，乘法须写 `*`。
 - 目标、x 或选用原料改变后，延迟约 0.65 秒自动求值并重新填写表格；非法目标不会覆盖原料表。表格可自由编辑，修改表格不会反向修改目标。
 - “选用原料”留空时，建议按元素或核素组成填写。也可输入逗号分隔的母体化合物，例如 `BaFe2As2, KFe2As2`，x=0.4 时建议摩尔比为 0.6:0.4。
 - 配平只适用于用户选定的独立原料组合。无法配平、有负用量或不唯一的组合会报错。它不判断反应、挥发、助熔剂、副产物和合成路线的可行性。
 
 Use `[57Fe]` for a specified isotope and braces for arithmetic subscripts. The target composition is separate from the editable material table. A blank material basis suggests elemental amounts; a supplied precursor basis is balanced only when it has an independent, nonnegative solution. These are stoichiometric suggestions, not unique synthesis recipes. Changing target inputs refills the table.
+
+`Ba1-xKxFeAs` 无法用 `BaAs, Fe2As, KAs` 精确配平：Ba/K/Fe 要求三者摩尔比为 `(1-x):0.5:x`，带入 As 为 1.5，而目标 As 为 1。若目标是 `Ba1-xKxFe2As2`，这组三原料的元素守恒比为 `(1-x):1:x`。软件会保留用户输入，不自动替换化学式。
 
 ## 验证与编码 / Validation and encoding
 

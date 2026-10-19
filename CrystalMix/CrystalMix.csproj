@@ -13,4 +13,7 @@
     <Description>Bilingual crystal growth raw-material ratio calculator.</Description>
     <InvariantGlobalization>false</InvariantGlobalization>
   </PropertyGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Data\isotopes.json" />
+  </ItemGroup>
 </Project>
