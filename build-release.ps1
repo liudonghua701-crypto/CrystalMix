@@ -13,7 +13,7 @@ New-Item -ItemType Directory -Force -Path $env:DOTNET_CLI_HOME, $env:NUGET_PACKA
 
 & $dotnet run --project '.\CrystalMix.Tests\CrystalMix.Tests.csproj' -c Release --configfile '.\NuGet.Config'
 if ($LASTEXITCODE -ne 0) { throw 'Tests failed; packaging cancelled.' }
-foreach ($script in @('Install.ps1', 'Uninstall.ps1')) {
+foreach ($script in @('Install.ps1', 'Uninstall.ps1', 'InstallSupport.ps1')) {
     $bytes = [IO.File]::ReadAllBytes((Join-Path $projectRoot "installer\$script"))
     if ($bytes[0] -ne 239 -or $bytes[1] -ne 187 -or $bytes[2] -ne 191) { throw "UTF-8 BOM required: $script" }
     $errors = $null; $tokens = $null
@@ -42,7 +42,7 @@ New-Item -ItemType Directory -Force -Path $publishDir, $payloadDir | Out-Null
 if ($LASTEXITCODE -ne 0) { throw 'dotnet publish failed.' }
 
 Copy-Item -LiteralPath (Join-Path $publishDir 'CrystalMix.exe') -Destination $payloadDir -Force
-foreach ($file in @('Install.cmd', 'Install.ps1', 'Uninstall.cmd', 'Uninstall.ps1')) {
+foreach ($file in @('Install.cmd', 'Install.ps1', 'Uninstall.cmd', 'Uninstall.ps1', 'InstallSupport.ps1')) {
     Copy-Item -LiteralPath (Join-Path $projectRoot "installer\$file") -Destination $payloadDir -Force
 }
 

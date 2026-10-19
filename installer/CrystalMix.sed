@@ -36,6 +36,7 @@ FILE1=Install.cmd
 FILE2=Install.ps1
 FILE3=Uninstall.cmd
 FILE4=Uninstall.ps1
+FILE5=InstallSupport.ps1
 
 [SourceFiles]
 SourceFiles0=dist\installer-payload\
@@ -46,3 +47,4 @@ SourceFiles0=dist\installer-payload\
 %FILE2%=
 %FILE3%=
 %FILE4%=
+%FILE5%=

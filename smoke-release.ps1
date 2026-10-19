@@ -6,12 +6,12 @@ New-Item -ItemType Directory -Path $extractDir | Out-Null
 # 仅解包到项目内，不更改用户安装状态。
 $extract = Start-Process -FilePath $package -ArgumentList '/Q', '/C', ('/T:"' + $extractDir + '"') -WindowStyle Hidden -Wait -PassThru
 if ($extract.ExitCode -ne 0) { throw 'Installer extraction failed.' }
-foreach ($name in @('CrystalMix.exe', 'Install.ps1', 'Uninstall.ps1', 'Install.cmd', 'Uninstall.cmd')) {
+foreach ($name in @('CrystalMix.exe', 'Install.ps1', 'Uninstall.ps1', 'Install.cmd', 'Uninstall.cmd', 'InstallSupport.ps1')) {
     $actual = Join-Path $extractDir $name
     $expected = Join-Path $projectRoot ('dist\installer-payload\' + $name)
     if ((Get-FileHash -LiteralPath $actual).Hash -ne (Get-FileHash -LiteralPath $expected).Hash) { throw "Payload mismatch: $name" }
 }
-Write-Output 'PASS: all five extracted files match the release payload.'
+Write-Output 'PASS: all six extracted files match the release payload.'
 Add-Type @"
 using System;
 using System.Text;

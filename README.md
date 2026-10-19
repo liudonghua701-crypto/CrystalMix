@@ -78,3 +78,15 @@ Use `[57Fe]` for a specified isotope and braces for arithmetic subscripts. The t
 Git 仓库位于当前 E 盘项目的 `.git`；构建缓存、发布产物和截图不提交。首次提交保存开发前的代码基线。
 
 发布后可运行 `powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\smoke-release.ps1`。此检查会解包并校验全部文件、启动与正常关闭应用、验证安装确认框中文并选择“否”；不会实际安装或更改现有安装。解包目录保留在 `dist/smoke-*` 供核对。
+
+## 安装路径和卸载修复 / Installation folder and uninstall
+
+安装确认后会显示“安装位置”窗口，可直接输入完整路径或点击“浏览”。支持中文和空格路径；请选择专用文件夹，不支持磁盘根目录、安装源目录或目录链接。已有安装默认使用原目录；如需换目录，请先卸载旧版本，再运行安装包。
+
+The installer lets you enter or browse for a dedicated installation folder. Existing installations default to their current folder. Uninstall the old location before moving to another folder.
+
+卸载入口直接启动 PowerShell，不再依赖 CMD 延迟删除。卸载会校验注册目录，仅关闭该目录内的 CrystalMix 进程，只删除程序文件，保留用户文件；遇到文件占用会报错并保留入口以便重试。不要手动移动已安装目录。
+
+维护人员可从已解包的负载运行 `Install.ps1 -InstallDir "E:\Apps\CrystalMix" -Unattended -NoLaunch`。安装器回归测试为 `test-installer.ps1`，会在项目内进行真实安装和卸载，并在 finally 中恢复原有注册信息与快捷方式；`test-install-dialog.ps1` 验证路径输入界面，`test-uninstall-entry.ps1` 验证当前卸载入口并取消，不删除现有安装。
+
+独立 Git for Windows 已安装；仓库及全部提交仍位于 E 盘当前项目的 `.git` 中。可使用 `git status` 和 `git log --oneline` 查看状态与历史。
