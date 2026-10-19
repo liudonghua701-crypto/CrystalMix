@@ -421,7 +421,7 @@ public sealed partial class MainForm : Form
         var template = _localizer[key];
         return ex.Code switch
         {
-            "unknownElement" => string.Format(template, ex.Detail),
+            "unknownElement" or "unknownIsotope" => string.Format(template, ex.Detail),
             "missingBracket" => string.Format(template, ex.Detail),
             "expectedElement" or "mismatchedBracket" or "unexpected" =>
                 string.Format(template, ex.Position + 1),

@@ -99,7 +99,7 @@ public static class FormulaParser
                     if (end < 0) throw new FormulaException("missingBracket", AbsolutePosition, "]");
                     var species = _text[_index..(end + 1)];
                     if (!AtomicSpecies.TryGetMass(species, out _))
-                        throw new FormulaException("unknownElement", AbsolutePosition, species);
+                        throw new FormulaException("unknownIsotope", AbsolutePosition, species);
                     _index = end + 1;
                     var amount = ReadOptionalNumber(1d);
                     ValidateMultiplier(amount);

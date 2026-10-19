@@ -4,6 +4,32 @@ using CrystalMix.Chemistry;
 var tests = new List<(string Name, Action Run)>
 {
     ("Bilingual names", () => { if (ElementNames.Get("Fe") != "铁 / Iron" || ElementNames.Get("[57Fe]") != "铁 / Iron" || ElementNames.Get("Og") != "鿫 / Oganesson") throw new Exception("Names"); }),
+    ("Lutetium isotope masses and name", () => {
+        Near(FormulaParser.Parse("[175Lu]").MolarMass, 174.9407752);
+        Near(FormulaParser.Parse("[176Lu]").MolarMass, 175.9426897);
+        if (ElementNames.Get("[175Lu]") != "镥 / Lutetium") throw new Exception("Lutetium name");
+        if (!AtomicSpecies.SupportedIsotopes.Contains("[175Lu]")) throw new Exception("Help isotope list");
+    }),
+    ("Lutetium isotope oxide and target recipe", () => {
+        var target = TargetFormula.Evaluate("[175Lu]2O3", .4);
+        Near(target.MolarMass, 397.8785504);
+        Near(target.Composition["[175Lu]"], 2); Near(target.Composition["O"], 3);
+        var recipe = TargetRecipe.Suggest(target, new[] { "[175Lu]", "O2" });
+        Near(recipe.Single(r => r.Formula == "O2").MolarRatio, 1.5);
+        var weights = RecipeCalculator.Calculate(recipe, 10);
+        Near(weights.Sum(r => r.RequiredMass), 10);
+        Near(weights.Single(r => r.Formula == "[175Lu]").RequiredMass, 10 * 349.8815504 / 397.8785504);
+    }),
+    ("Lutetium isotope mixing and variable formula", () => {
+        var c = TargetFormula.Evaluate("[175Lu]{1-x}[176Lu]{x}Lu", .25).Composition;
+        Near(c["[175Lu]"], .75); Near(c["[176Lu]"], .25); Near(c["Lu"], 1);
+        Near(FormulaParser.Parse("Lu").MolarMass, 174.9668);
+    }),
+    ("Unsupported isotope diagnostic", () => {
+        try { FormulaParser.Parse("[999Lu]"); }
+        catch (FormulaException ex) { if (ex.Code == "unknownIsotope" && ex.Detail == "[999Lu]") return; throw; }
+        throw new Exception("Unsupported nuclide was accepted");
+    }),
     ("Pure isotope", () => Near(FormulaParser.Parse("[57Fe]").MolarMass, 56.93539284)),
     ("Isotope compound", () => Near(FormulaParser.Parse("[2H]2O").MolarMass, 20.02720355624)),
     ("Mixed isotope composition", () => { var c = FormulaParser.Parse("Fe[57Fe]2O3").Composition; Near(c["Fe"], 1); Near(c["[57Fe]"], 2); }),

@@ -2,7 +2,7 @@ using CrystalMix.Chemistry;
 namespace CrystalMix;
 internal static class AdvancedHelp
 {
-    public static string Text => "\n\n同位素 / Isotopes: [57Fe], [57Fe]2O3, [2H]2O.\n"
+    public static string Text => "\n\n同位素 / Isotopes: [57Fe], [57Fe]2O3, [2H]2O, [175Lu], [175Lu]2O3.\n"
         + "方括号内是质量数和元素符号；不支持的核素会报错。\nUse mass number then symbol; unsupported nuclides are rejected.\n"
         + "已收录 / Supported: " + AtomicSpecies.SupportedIsotopes
         + "\n\n目标 / Target: Ba1-xKxFe2As2; x = 0.4.\n"

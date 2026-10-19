@@ -46,6 +46,7 @@ internal sealed class Localizer
             "1. 每行输入一种原料的化学式与摩尔份数。\n2. 输入原料总质量（克），点击“计算配比”。\n3. 质量占比按 n × M 归一化，所需质量之和等于总质量。\n\n支持：元素、化合物、嵌套括号、小数下标，以及用中点表示的结晶水，例如 Fe、FeSe、Ca(OH)2、Fe1.03Te、CuSO4·5H2O。\n\n提示：化学式区分大小写。放射性元素使用代表同位素质量数；高精度实验请按原料证书中的同位素组成与纯度修正。",
             "1. Enter one raw material formula and its molar parts per row.\n2. Enter the total batch mass in grams, then select Calculate recipe.\n3. Mass fractions are normalized from n × M, and required masses sum to the batch total.\n\nSupported: elements, compounds, nested brackets, decimal subscripts, and hydrate middle dots—for example Fe, FeSe, Ca(OH)2, Fe1.03Te, and CuSO4·5H2O.\n\nFormula symbols are case-sensitive. Radioactive elements use representative isotope mass numbers; for high-precision work, correct for the certified isotope composition and purity of your source material."),
         ["formula.empty"] = ("化学式不能为空", "Formula cannot be empty"),
+        ["formula.unknownIsotope"] = ("尚未收录同位素：{0}。请在使用说明中查看已支持的核素。", "Isotope not yet included: {0}. See Help for supported nuclides."),
         ["formula.unknownElement"] = ("未知元素：{0}", "Unknown element: {0}"),
         ["formula.expectedElement"] = ("第 {0} 位应为元素符号或左括号", "Expected an element or opening bracket at position {0}"),
         ["formula.mismatchedBracket"] = ("第 {0} 位括号不匹配", "Mismatched bracket at position {0}"),

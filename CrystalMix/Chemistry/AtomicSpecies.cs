@@ -13,7 +13,9 @@ public static class AtomicSpecies
         ["[16O]"] = 15.99491461957, ["[17O]"] = 16.99913175650,
         ["[18O]"] = 17.99915961286, ["[54Fe]"] = 53.93960899,
         ["[56Fe]"] = 55.93493633, ["[57Fe]"] = 56.93539284,
-        ["[58Fe]"] = 57.93327443
+        ["[58Fe]"] = 57.93327443,
+        // Lu: https://physics.nist.gov/cgi-bin/Compositions/stand_alone.pl?ascii=ascii&ele=Lu
+        ["[175Lu]"] = 174.9407752, ["[176Lu]"] = 175.9426897
     };
 
     public static bool TryGetMass(string species, out double mass) =>
