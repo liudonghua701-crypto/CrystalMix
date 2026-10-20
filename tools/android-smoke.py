@@ -16,7 +16,7 @@ def nodes():
 def click_text(label, scroll=False):
     for _ in range(6 if scroll else 1):
         for node in nodes():
-            if node.get("text") == label:
+            if node.get("text", "").casefold() == label.casefold():
                 values = list(map(int, re.findall(r"\d+", node.get("bounds", ""))))
                 if len(values) == 4 and values[3] > values[1]:
                     adb("shell", "input", "tap", str((values[0]+values[2])//2), str((values[1]+values[3])//2))
