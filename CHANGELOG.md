@@ -13,6 +13,7 @@ The Android edition has its own version sequence. Windows remains at 1.1.0.
 - Added result copying, CSV text sharing and CSV file export through Android's system document picker.
 - Included ARM64, ARM32 and x86-64 runtimes in a signed APK for Android 8.0 and later, with no network permission.
 - Added an Android release build/signature-verification script and a cross-platform core suite with 7,040 assertions.
+- Verified the published APK on a Linux-hosted Android 14 emulator: installation, startup, 10 g mass calculation, target filling, Lu-175 search/add, localized Help, and language/page restoration. Added a repeatable GitHub Actions workflow and screenshot evidence; physical-device and CSV interaction testing remain pending.
 - Kept release signing keys and credentials private, outside tracked source files.
 
 ## 1.1.0 — 2026-10-19

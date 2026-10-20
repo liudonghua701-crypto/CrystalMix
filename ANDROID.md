@@ -4,7 +4,7 @@ CrystalMix Android is a native, offline application that reuses the Windows calc
 
 ## Install
 
-This is an initial preview: calculation and signature checks have passed, but device startup verification is pending because the local Windows emulator crashes before boot. Download `CrystalMix-Android-1.0.0.apk` from the **Android 1.0.0** GitHub pre-release, open it on your phone, and allow installation from that browser or file manager when Android requests it. The minimum version is **Android 8.0 (API 26)**. One APK contains ARM64, ARM32 and x86-64 native runtimes. This is a directly installable APK, not a Play Store listing.
+This preview passed calculation, signature, installation, startup and core workflow checks on a Linux-hosted Android 14 emulator. Physical-device testing and CSV file-picker/share-sheet interactions remain pending. Download `CrystalMix-Android-1.0.0.apk` from the **Android 1.0.0** GitHub pre-release, open it on your phone, and allow installation from that browser or file manager when Android requests it. The minimum version is **Android 8.0 (API 26)**. One APK contains ARM64, ARM32 and x86-64 native runtimes. This is a directly installable APK, not a Play Store listing.
 
 The app requests no network permission. Its isotope data and calculations work offline. Android may display a warning for an app installed outside a store; use the published checksum to identify the released file.
 

@@ -8,7 +8,7 @@ CrystalMix converts user-selected raw materials and molar parts into molar masse
 
 ## Android APK
 
-A native, offline Android preview is available for **Android 8.0 and later**. Device startup validation is pending; see [verification status](ANDROID-VALIDATION.md). It shares the chemistry and calculation sources with the Windows edition and provides touch-friendly material cards, target balancing, the isotope catalog, bilingual Help and CSV export.
+A native, offline Android preview is available for **Android 8.0 and later**. Installation, startup and core workflows passed on an Android 14 emulator; see [verification status](ANDROID-VALIDATION.md). Physical-device testing remains pending. It shares the chemistry and calculation sources with the Windows edition and provides touch-friendly material cards, target balancing, the isotope catalog, bilingual Help and CSV export.
 
 [Download Android APK](https://github.com/liudonghua701-crypto/CrystalMix/releases/download/android-v1.0.0/CrystalMix-Android-1.0.0.apk) · [Android installation, features and builds](ANDROID.md)
 
