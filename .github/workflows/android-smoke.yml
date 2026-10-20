@@ -30,7 +30,7 @@ jobs:
           sdkmanager 'platform-tools' 'emulator' 'system-images;android-34;default;x86_64'
           echo no | avdmanager create avd -n crystalmix -k 'system-images;android-34;default;x86_64' --device pixel
           "$ANDROID_HOME/emulator/emulator" -avd crystalmix -no-window -no-audio -no-snapshot -no-boot-anim -gpu swiftshader_indirect -accel on > smoke-artifacts/emulator.log 2>&1 &
-          adb wait-for-device
+          timeout 120 adb wait-for-device || { cat smoke-artifacts/emulator.log; exit 1; }
           for i in $(seq 1 90); do
             if [ "$(adb shell getprop sys.boot_completed | tr -d '\r')" = 1 ]; then break; fi
             sleep 2
@@ -47,7 +47,7 @@ jobs:
       - name: Collect runtime diagnostics
         if: always()
         run: |
-          adb logcat -d > smoke-artifacts/logcat.txt || true
+          timeout 15 adb logcat -d > smoke-artifacts/logcat.txt || true
           rm -f smoke-artifacts/CrystalMix-Android-1.0.0.apk
       - uses: actions/upload-artifact@v4
         if: always()
