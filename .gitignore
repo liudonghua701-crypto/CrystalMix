@@ -1,4 +1,9 @@
 .tools/
+.signing/
+*.apk
+*.aab
+*.keystore
+*.jks
 **/bin/
 **/obj/
 dist/

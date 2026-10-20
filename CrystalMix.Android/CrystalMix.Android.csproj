@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0-android</TargetFramework>
+    <SupportedOSPlatformVersion>26</SupportedOSPlatformVersion>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>CrystalMix.Mobile</RootNamespace>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <ApplicationId>io.github.liudonghua701.crystalmix</ApplicationId>
+    <ApplicationVersion>1</ApplicationVersion>
+    <ApplicationDisplayVersion>1.0.0</ApplicationDisplayVersion>
+    <AndroidPackageFormats>apk</AndroidPackageFormats>
+    <RuntimeIdentifiers>android-arm64;android-arm;android-x64</RuntimeIdentifiers>
+    <AndroidLinkMode>None</AndroidLinkMode>
+    <RunAOTCompilation>false</RunAOTCompilation>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\CrystalMix\Chemistry\*.cs" Link="Chemistry\%(Filename)%(Extension)" />
+    <Compile Include="..\CrystalMix\Localization.cs" Link="Localization.cs" />
+    <Compile Include="..\CrystalMix\AdvancedHelp.cs" Link="AdvancedHelp.cs" />
+    <Compile Include="..\CrystalMix\Calculation\*.cs" Link="Calculation\%(Filename)%(Extension)" />
+    <EmbeddedResource Include="..\CrystalMix\Data\isotopes.json" LogicalName="CrystalMix.Data.isotopes.json" />
+    <AndroidResource Include="..\CrystalMix\Assets\CrystalMix.png" Link="Resources\drawable\crystal_icon.png" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net8.0</TargetFramework><ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable></PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\CrystalMix\Chemistry\*.cs" Link="Chemistry\%(Filename)%(Extension)" />
+    <Compile Include="..\CrystalMix\Calculation\*.cs" Link="Calculation\%(Filename)%(Extension)" />
+    <Compile Include="..\CrystalMix\Localization.cs" Link="Localization.cs" />
+    <Compile Include="..\CrystalMix\AdvancedHelp.cs" Link="AdvancedHelp.cs" />
+    <EmbeddedResource Include="..\CrystalMix\Data\isotopes.json" LogicalName="CrystalMix.Data.isotopes.json" />
+  </ItemGroup>
+</Project>
