@@ -23,6 +23,8 @@ jobs:
           gh release download "$RELEASE_TAG" --pattern 'CrystalMix-Android-1.0.0.apk' --dir smoke-artifacts
       - name: Prepare Android emulator
         run: |
+          export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH"
+          echo "$ANDROID_HOME/platform-tools" >> "$GITHUB_PATH"
           sudo chmod 666 /dev/kvm
           yes | sdkmanager --licenses > /dev/null || true
           sdkmanager 'platform-tools' 'emulator' 'system-images;android-34;default;x86_64'
