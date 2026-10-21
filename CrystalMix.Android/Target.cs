@@ -65,7 +65,7 @@ public partial class MainActivity
     private void ShowGuide()
     {
         content.AddView(Text(L("A small guide to precise batches", "配料计算使用说明"), 22));
-        content.AddView(Text("CrystalMix Android 1.1.0", 13));
+        content.AddView(Text("CrystalMix Android 1.2.0", 13));
         content.AddView(Text(L("One workspace: expand Target composition to generate a recipe. Edit formulas, molar parts and total mass; weighing results update in each row. Use the bottom bar to add materials or isotopes. More contains exports and this guide. Target edits only change the preview until you confirm replacement.",
             "单页工作台：展开目标组成可生成配料表。修改化学式、摩尔份数或总质量，每行称量结果即时更新。底部可添加原料或同位素；更多菜单提供导出与帮助。目标编辑仅更新预览，确认替换后才修改原料。")));
         var instructions = AdvancedHelp.Get(Localizer.Language)

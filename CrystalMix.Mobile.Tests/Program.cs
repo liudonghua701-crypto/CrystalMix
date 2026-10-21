@@ -3,7 +3,7 @@ using CrystalMix.Chemistry;
 using CrystalMix.Calculation;
 using System.Text.RegularExpressions;
 
-int checks = 0;
+int checks = WeighingTests.Run();
 void Require(bool value, string detail) { checks++; if (!value) throw new Exception(detail); }
 void Near(double a, double b) => Require(double.IsFinite(a) && Math.Abs(a - b) < 1e-8, $"{a} != {b}");
 void Reject(Action action) { try { action(); } catch (Exception e) when (e is ArgumentException or FormulaException or FormatException) { checks++; return; } throw new Exception("Invalid input accepted"); }

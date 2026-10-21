@@ -7,7 +7,7 @@
     <Nullable>enable</Nullable>
     <AssemblyName>CrystalMix</AssemblyName>
     <RootNamespace>CrystalMix</RootNamespace>
-    <Version>1.1.0</Version>
+    <Version>1.2.0</Version>
     <ApplicationIcon>Assets\CrystalMix.ico</ApplicationIcon>
     <Authors>CrystalMix</Authors>
     <Product>CrystalMix Crystal Growth Ratio Calculator</Product>

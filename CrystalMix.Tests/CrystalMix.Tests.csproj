@@ -8,5 +8,6 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\CrystalMix\CrystalMix.csproj" />
+    <Compile Include="..\CrystalMix.Mobile.Tests\WeighingTests.cs" Link="WeighingTests.cs" />
   </ItemGroup>
 </Project>

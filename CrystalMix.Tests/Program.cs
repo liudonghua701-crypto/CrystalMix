@@ -3,6 +3,7 @@ using CrystalMix.Chemistry;
 
 var tests = new List<(string Name, Action Run)>
 {
+    ("Measured-mass scaling", () => WeighingTests.Run()),
     ("Bilingual names", () => { if (ElementNames.Get("Fe") != "铁 / Iron" || ElementNames.Get("[57Fe]") != "铁 / Iron" || ElementNames.Get("Og") != "鿫 / Oganesson") throw new Exception("Names"); }),
     ("Lutetium isotope masses and name", () => {
         Near(FormulaParser.Parse("[175Lu]").MolarMass, 174.9407752);
@@ -108,6 +109,7 @@ var tests = new List<(string Name, Action Run)>
 };
 
 if (args.Contains("--ui")) {
+    tests.Add(("Measured mass preview, cancel and apply", WeighingUiChecks.Run));
     tests.Add(("UI layout and target workflow", UiChecks.Run));
     tests.Add(("Isotope catalog UI and selection", IsotopeUiChecks.Run));
     tests.Add(("Localized scrollable help windows", HelpChecks.RunUi));

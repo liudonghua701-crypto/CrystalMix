@@ -89,6 +89,7 @@ public sealed partial class MainForm : Form
         _clearButton.Click += (_, _) => ClearRecipe(confirm: true);
         _helpButton.Click += (_, _) => { using var help = new HelpDialog(_localizer); help.ShowDialog(this); };
         _calculateButton.Click += (_, _) => Calculate(showErrors: true);
+        _weighingButton.Click += (_, _) => ScaleFromActualMass();
         _copyButton.Click += (_, _) => CopyResults();
         _exportButton.Click += (_, _) => ExportResults();
         _grid.CellEndEdit += (_, e) => { if (e.ColumnIndex == 1) RecognizeMaterial(_grid.Rows[e.RowIndex]); Calculate(showErrors: false); };
@@ -216,8 +217,9 @@ public sealed partial class MainForm : Form
         _totalMassText.Text = "10"; _totalMassText.Width = 140;
         _totalMassText.TextAlign = HorizontalAlignment.Right;
         StyleButton(_copyButton); StyleButton(_exportButton); StyleButton(_calculateButton, true);
+        StyleButton(_weighingButton);
         panel.Controls.AddRange(new Control[] { _totalMassLabel, _totalMassText, _gramsLabel,
-            _copyButton, _exportButton, _calculateButton });
+            _copyButton, _exportButton, _weighingButton, _calculateButton });
         return panel;
     }
     private Control BuildStatusStrip()
@@ -277,6 +279,7 @@ public sealed partial class MainForm : Form
         _totalMassLabel.Text = _localizer["totalMass"];
         _gramsLabel.Text = _localizer["grams"];
         _calculateButton.Text = _localizer["calculate"];
+        _weighingButton.Text = W("Use actual mass", "按实称质量调整");
         _copyButton.Text = _localizer["copy"];
         _exportButton.Text = _localizer["export"];
         foreach (DataGridViewColumn column in _grid.Columns)

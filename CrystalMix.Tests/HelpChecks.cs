@@ -59,6 +59,6 @@ internal static class HelpChecks
         using var resource = assembly.GetManifestResourceStream("CrystalMix.Assets.CrystalMix.ico")!;
         using var reader = new BinaryReader(resource);
         if (reader.ReadUInt16() != 0 || reader.ReadUInt16() != 1 || reader.ReadUInt16() != 7) throw new Exception("Invalid multi-size icon");
-        if (assembly.GetName().Version!.Major != 1 || assembly.GetName().Version!.Minor != 1) throw new Exception("Release version mismatch");
+        if (assembly.GetName().Version!.Major != 1 || assembly.GetName().Version!.Minor != 2) throw new Exception("Release version mismatch");
     }
 }

@@ -31,6 +31,10 @@ time.sleep(8)
 assert adb("shell", "pidof", PACKAGE)
 assert "Total: 10 g" in texts(), "Initial automatic calculation missing"
 screenshot("workspace-default")
+import os
+if os.environ.get("RELEASE_TAG", "").startswith("android-v1.2."):
+    import android_weighing
+    android_weighing.run(edit)
 edit("Total batch mass · g", "20")
 assert "Total: 20 g" in texts(), "Mass edit did not calculate automatically"
 edit("Molar parts 1", "2")

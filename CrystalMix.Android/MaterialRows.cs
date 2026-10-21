@@ -23,6 +23,7 @@ public partial class MainActivity
         card.AddView(line); card.AddView(name);
         var result = Text("", 18); result.SetTextColor(accent); result.SetTextIsSelectable(true);
         materialResults[material] = result; card.AddView(result);
+        card.AddView(Button(L("Use actual mass", "按实称质量调整"), () => UseActualMass(material)));
         card.AddView(Button(string.IsNullOrWhiteSpace(material.Name) ? L("Label / remove", "备注 / 删除") : material.Name,
             () => EditMaterial(material)));
         content.AddView(card); content.AddView(Text("", 2));
