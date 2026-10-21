@@ -2,6 +2,16 @@
 
 This file records user-visible changes and the actual development sequence. Version 1.1.0 is the first numbered GitHub release. Earlier development snapshots retained application version 1.0.0; the entries below identify them by commit instead of inventing retroactive release numbers.
 
+## Android 1.1.0 — 2026-10-21
+
+- Replaced four primary pages with a single weighing workspace: collapsible target settings, editable materials and live weighing results.
+- Formula, molar-part and batch-mass edits recalculate immediately. Invalid input clears stale row results and displays an explanation.
+- Placed formula and molar parts side by side in compact material cards; moved optional labels and deletion into a row action dialog.
+- Kept Add Material, Isotopes and More available in a fixed bottom action bar. Isotope selection closes its dialog and returns directly to the inserted material.
+- Moved Help and CSV actions into contextual dialogs/menus. Target replacement still requires confirmation and preserves the selected batch mass.
+- Retained offline calculations, isotope coverage, signing identity and stored recipe drafts. Android version code increases to 2 for in-place upgrades.
+- Passed 7,040 shared-core assertions, signature verification and Android 14 workspace tests, including 360dp width with 1.3x font scaling. Physical-device and CSV interaction checks remain pending.
+
 ## Android 1.0.0 — 2026-10-20
 
 The Android edition has its own version sequence. Windows remains at 1.1.0.

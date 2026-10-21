@@ -1,4 +1,20 @@
-# Android 1.0.0 verification
+# Android verification
+
+## Android 1.1.0 — single-workspace interface
+
+Verified on 2026-10-21 using [Actions run 39560691248](https://github.com/liudonghua701-crypto/CrystalMix/actions/runs/39560691248). The APK tested under the rc1 tag is identical to the final 1.1.0 APK.
+
+- Native Android 14 installation and startup passed.
+- The initial 10 g result appeared automatically. Editing total mass to 20 g and editing molar parts required no Calculate button or page navigation.
+- Expanding Target, setting x = 0.25 and confirming generation populated BaAs with 0.75 molar parts while retaining the 20 g batch.
+- Adding [175Lu] through the isotope dialog returned directly to the material workspace.
+- Contextual Help and language switching worked; the target-generated recipe and total mass survived backgrounding, force-stop and relaunch.
+- At 360 x 800 / 160 dpi with font scale 1.3, all three bottom actions remained within the viewport with at least 48 px touch height. Screenshots were inspected for wrapping and readability; the material list remains scrollable.
+- Shared chemistry regression: 7,040 assertions passed, including all 3,498 isotope records. APK signatures v2/v3 passed with the original release certificate.
+
+Physical phones, CSV chooser/share-sheet interactions and every possible display setting are not covered by these checks. The release remains a preview. Check release SHA256SUMS for the exact binary hash.
+
+## Android 1.0.0 verification
 
 Date: 2026-10-20. Package: `io.github.liudonghua701.crystalmix`.
 
