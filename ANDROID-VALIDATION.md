@@ -1,5 +1,9 @@
 # Android verification
 
+## Android 1.2.0 — actual weighed mass
+
+Measured-mass preview, invalid input, Cancel and Apply passed on Android 14, together with the existing workspace regressions. See [the 1.2.0 verification report](WEIGHING-VALIDATION.md) and [run 39590243343](https://github.com/liudonghua701-crypto/CrystalMix/actions/runs/39590243343). Shared-core coverage is now 7,118 assertions. The new Apply operation updates batch mass while preserving formulas and molar parts.
+
 ## Android 1.1.0 — single-workspace interface
 
 Verified on 2026-10-21 using [Actions run 39560691248](https://github.com/liudonghua701-crypto/CrystalMix/actions/runs/39560691248). The APK tested under the rc1 tag is identical to the final 1.1.0 APK.

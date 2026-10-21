@@ -2,6 +2,15 @@
 
 This file records user-visible changes and the actual development sequence. Version 1.1.0 is the first numbered GitHub release. Earlier development snapshots retained application version 1.0.0; the entries below identify them by commit instead of inventing retroactive release numbers.
 
+## Windows 1.2.0 and Android 1.2.0 — 2026-10-21
+
+- Added measured-mass scaling for chunks and other difficult-to-weigh materials. Choose one material, enter its actual mass in grams, preview the old/new targets and apply to the entire batch.
+- Preserved all material formulas and molar parts; updated batch mass, weighing targets and subsequent exports together. Cancel leaves the recipe unchanged.
+- Added an Android row action and a Windows material-selection dialog, with localized instructions and a scrollable per-material preview.
+- Rejected zero, negative, nonfinite and overflowing values. Added 78 shared-core checks for scaling up/down, isotope compounds, duplicate rows, single-material batches, mass closure and invalid input.
+- Documented that one measured material is used at a time: other already-weighed materials are not locked, and displayed masses are total targets rather than additional amounts.
+- Passed 7,118 mobile shared-core assertions, 43 Windows tests including dialog interaction, Windows installer/startup smoke checks and Android 14 measured-mass/workspace tests. Added screenshots and a release verification report.
+
 ## Android 1.1.0 — 2026-10-21
 
 - Replaced four primary pages with a single weighing workspace: collapsible target settings, editable materials and live weighing results.

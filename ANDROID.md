@@ -4,11 +4,15 @@ CrystalMix Android is a native, offline application that reuses the Windows calc
 
 ## Install
 
-Version 1.1.0 passed calculation, signature, installation, startup, single-workspace interaction and narrow-screen/large-font checks on a Linux-hosted Android 14 emulator. Physical-device testing and CSV file-picker/share-sheet interactions remain pending. Download `CrystalMix-Android-1.1.0.apk` from the **Android 1.1.0** GitHub pre-release, open it on your phone, and allow installation from that browser or file manager when Android requests it. The minimum version is **Android 8.0 (API 26)**. One APK contains ARM64, ARM32 and x86-64 native runtimes. This is a directly installable APK, not a Play Store listing.
+Version 1.2.0 passed calculation, signature, installation, startup, actual-weighing and workspace checks on a Linux-hosted Android 14 emulator, including a narrow screen with enlarged fonts. See [the verification report](WEIGHING-VALIDATION.md). Physical-device testing and CSV file-picker/share-sheet interactions remain pending. Download `CrystalMix-Android-1.2.0.apk` from the **Android 1.2.0** GitHub pre-release, open it on your phone, and allow installation from that browser or file manager when Android requests it. The minimum version is **Android 8.0 (API 26)**. One APK contains ARM64, ARM32 and x86-64 native runtimes. This is a directly installable APK, not a Play Store listing.
 
-Install 1.1.0 over 1.0.0 to retain private recipe drafts; the application ID and signing certificate are unchanged. Do not uninstall first if you want to retain drafts.
+Install 1.2.0 over an earlier Android release to retain private recipe drafts; the application ID and signing certificate are unchanged. Do not uninstall first if you want to retain drafts.
 
 The app requests no network permission. Its isotope data and calculations work offline. Android may display a warning for an app installed outside a store; use the published checksum to identify the released file.
+
+## Actual weighing
+
+Press **Use actual mass** under the material you have weighed. Enter grams, review every updated mass and the new total, then apply. Ratios remain unchanged; other measured materials are not locked. Cancel does not change the recipe. See [WEIGHING.md](WEIGHING.md).
 
 ## Mobile workflow
 

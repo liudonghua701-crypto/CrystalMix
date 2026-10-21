@@ -6,11 +6,15 @@
 
 CrystalMix converts user-selected raw materials and molar parts into molar masses, mass fractions, and weighing masses for a specified batch. It also evaluates target compositions and checks whether a selected precursor basis can reproduce them. The interface offers Chinese and English; the Help window follows the selected language.
 
+## Adjusting to an actual weighed mass
+
+Both editions support **Use actual mass**: enter the measured mass of one material, preview the scaled targets, and apply while retaining all molar ratios. This updates the batch total as well. See [the weighing guide](WEIGHING.md) for an example and the distinction between new targets and already-weighed amounts.
+
 ## Android APK
 
 A native, offline Android preview is available for **Android 8.0 and later**. Installation, startup and core workflows passed on an Android 14 emulator; see [verification status](ANDROID-VALIDATION.md). Physical-device testing remains pending. It shares the chemistry and calculation sources with the Windows edition and provides a single weighing workspace with live row results, collapsible target settings, a contextual isotope picker, bilingual Help and CSV export.
 
-[Download Android APK](https://github.com/liudonghua701-crypto/CrystalMix/releases/download/android-v1.1.0/CrystalMix-Android-1.1.0.apk) · [Android installation, features and builds](ANDROID.md)
+[Download Android APK](https://github.com/liudonghua701-crypto/CrystalMix/releases/download/android-v1.2.0/CrystalMix-Android-1.2.0.apk) · [Android installation, features and builds](ANDROID.md)
 
 ## Download and install (Windows)
 
