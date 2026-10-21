@@ -13,6 +13,7 @@ public sealed class MobileState
 {
     public bool English { get; set; } = !System.Globalization.CultureInfo.CurrentUICulture.Name.StartsWith("zh");
     public int Page { get; set; }
+    public bool TargetExpanded { get; set; }
     public string Total { get; set; } = "10";
     public string Target { get; set; } = "Ba1-xKxFe2As2";
     public string X { get; set; } = "0.4";

@@ -33,21 +33,13 @@ public partial class MainActivity : Activity
         header.AddView(Button(state.English ? "中文" : "EN", () => { state.English = !state.English; ShowPage(page); Save(); }));
         root.AddView(header);
         root.AddView(Text(L("OFFLINE · CRYSTAL GROWTH", "离线使用 · 晶体配料"), 12));
-        var scroll = new ScrollView(this) { FillViewport = true };
+        workspaceScroll = new ScrollView(this) { FillViewport = true };
+        var scroll = workspaceScroll;
         content = Stack(); scroll.AddView(content);
         root.AddView(scroll, new LinearLayout.LayoutParams(-1, 0, 1));
-        var tabs = new LinearLayout(this) { Orientation = Orientation.Horizontal };
-        var names = new[] { L("Recipe", "配料"), L("Target", "目标"), L("Isotopes", "核素"), L("Guide", "帮助") };
-        for (int i = 0; i < names.Length; i++)
-        {
-            int tab = i;
-            var button = Button(names[i], () => { ShowPage(tab); Save(); });
-            button.SetTextColor(tab == page ? accent : ink);
-            button.TextSize = 12;
-            tabs.AddView(button, new LinearLayout.LayoutParams(0, -2, 1));
-        }
-        root.AddView(tabs); SetContentView(root);
-        switch (page) { case 1: ShowTarget(); break; case 2: ShowCatalog(); break; case 3: ShowGuide(); break; default: ShowRecipe(); break; }
+        BuildActionBar(); SetContentView(root);
+        state.Page = 0;
+        ShowWorkspace();
     }
     private int Dp(float value) => (int)(value * Resources!.DisplayMetrics!.Density + .5f);
     private LinearLayout Stack() => new(this) { Orientation = Orientation.Vertical };
@@ -59,13 +51,15 @@ public partial class MainActivity : Activity
     private Button Button(string value, Action action)
     {
         var button = new Button(this) { Text = value }; button.SetAllCaps(false);
-        button.SetMinHeight(Dp(48)); button.Click += (_, _) => action(); return button;
+        button.SetMinHeight(Dp(48)); button.SetTextColor(accent);
+        button.Click += (_, _) => action(); return button;
     }
     private EditText Input(LinearLayout parent, string label, string value, Action<string> changed, bool number = false)
     {
         parent.AddView(Text(label, 13));
         var edit = new EditText(this) { Text = value, TextSize = 16 };
         edit.SetSingleLine(true);
+        edit.ContentDescription = label;
         edit.SetTextColor(ink);
         edit.InputType = number ? Android.Text.InputTypes.ClassNumber | Android.Text.InputTypes.NumberFlagDecimal | Android.Text.InputTypes.NumberFlagSigned
             : Android.Text.InputTypes.ClassText | Android.Text.InputTypes.TextFlagNoSuggestions;

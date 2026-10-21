@@ -25,7 +25,10 @@ if($LASTEXITCODE -ne 0){throw 'Android publish failed.'}
 $apk=Get-ChildItem 'CrystalMix.Android\bin\Release\net8.0-android\publish' -Filter '*.apk' | Where-Object Name -NotLike '*-Signed.apk' | Select-Object -First 1
 if(-not $apk){throw 'APK not found.'}
 New-Item -ItemType Directory -Force dist | Out-Null
-$destination=Join-Path $PWD 'dist\CrystalMix-Android-1.0.0.apk'
+[xml]$project=Get-Content CrystalMix.Android/CrystalMix.Android.csproj
+$version=$project.Project.PropertyGroup.ApplicationDisplayVersion
+$apkName="CrystalMix-Android-$version.apk"
+$destination=Join-Path $PWD ("dist\" + $apkName)
 $signer=Get-ChildItem (Join-Path $SdkDirectory 'build-tools') -Recurse -Filter apksigner.jar | Sort-Object FullName -Descending | Select-Object -First 1
 $zipalign=Join-Path (Split-Path (Split-Path $signer.FullName)) 'zipalign.exe'
 $aligned=Join-Path $PWD 'dist\android-aligned.apk'
@@ -37,6 +40,6 @@ if($LASTEXITCODE -ne 0){throw 'APK release signing failed.'}
 & $java -jar $signer.FullName verify --verbose --print-certs $destination
 if($LASTEXITCODE -ne 0){throw 'APK signature verification failed.'}
 $hash=(Get-FileHash $destination).Hash.ToLowerInvariant()
-"$hash  CrystalMix-Android-1.0.0.apk" | Set-Content dist/ANDROID-SHA256SUMS.txt -Encoding ascii
+"$hash  $apkName" | Set-Content dist/ANDROID-SHA256SUMS.txt -Encoding ascii
 Get-Item $destination | Select-Object Name,Length
 'Android APK built and signature verified.'

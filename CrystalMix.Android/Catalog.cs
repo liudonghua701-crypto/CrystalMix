@@ -30,7 +30,8 @@ public partial class MainActivity
                 list.AddView(Button(L("Add ", "添加 ") + isotope.Species, () =>
                 {
                     state.Materials.Add(new() { Formula = isotope.Species, Parts = "1" }); Save();
-                    Toast.MakeText(this, L("Added to Recipe", "已加入配料表"), ToastLength.Short)!.Show();
+                    toolDialog?.Dismiss(); ShowPage(0);
+                    workspaceScroll.Post(() => workspaceScroll.FullScroll(Android.Views.FocusSearchDirection.Down));
                 }));
             }
             if (offset > 0) list.AddView(Button(L("Previous 20", "上一页"), () => { offset -= 20; Refresh(); }));

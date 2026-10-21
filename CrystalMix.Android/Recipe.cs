@@ -13,39 +13,34 @@ public partial class MainActivity
     {
         content.AddView(Text(L("Your weighing plan", "原料称量方案"), 22));
         Input(content, L("Total batch mass · g", "原料总质量 · 克"), state.Total, s => { state.Total = s; ClearResults(); }, true);
-        foreach (var material in state.Materials.ToArray())
-        {
-            var card = Stack(); card.SetPadding(Dp(12), Dp(8), Dp(12), Dp(8));
-            card.SetBackgroundColor(Android.Graphics.Color.White);
-            var name = Text(ElementNames.Get(material.Formula) ?? "", 13);
-            Input(card, L("Material formula", "原料化学式"), material.Formula, s =>
-            { material.Formula = s; name.Text = ElementNames.Get(s) ?? ""; ClearResults(); });
-            card.AddView(name);
-            Input(card, L("Custom label (optional)", "自定义名称（可选）"), material.Name, s => { material.Name = s; ClearResults(); });
-            Input(card, L("Molar parts", "摩尔份数"), material.Parts, s => { material.Parts = s; ClearResults(); }, true);
-            card.AddView(Button(L("Remove material", "删除此原料"), () => { state.Materials.Remove(material); ShowPage(0); Save(); }));
-            content.AddView(card); content.AddView(Text("", 4));
-        }
-        content.AddView(Button(L("+ Add material", "+ 添加原料"), () =>
-        { state.Materials.Add(new() { Formula = "", Parts = "1" }); ShowPage(0); Save(); }));
-        content.AddView(Button(L("Calculate masses", "计算称量质量"), Calculate));
+        materialResults.Clear();
+        for (int i = 0; i < state.Materials.Count; i++) MaterialRow(state.Materials[i], i);
         recipeOutput = Text(""); recipeOutput.SetTextIsSelectable(true); content.AddView(recipeOutput);
-        content.AddView(Button(L("Copy results", "复制结果"), () => Export(false)));
-        content.AddView(Button(L("Share CSV", "分享 CSV"), () => Export(true)));
-        content.AddView(Button(L("Save CSV file", "保存 CSV 文件"), () => Export(true, true)));
+
+
+
     }
-    private void ClearResults() { if (recipeOutput is not null) recipeOutput.Text = ""; }
+    private void ClearResults() { if (!building) Calculate(); }
     private void Calculate()
     {
         try
         {
             var results = Results();
-            recipeOutput.Text = string.Join("\n\n", results.Select(r =>
-                $"{r.Formula}  {r.Name}\n{r.RequiredMass:G8} g   ·   {r.MassFraction:P3}\n{L("Molar mass", "摩尔质量")}: {r.MolarMass:G9} g/mol"))
-                + $"\n\n{L("Total", "合计")}: {results.Sum(r => r.RequiredMass):G10} g";
+            recipeOutput.Text = "";
+            for (int i = 0; i < results.Count; i++)
+            {
+                var r = results[i];
+                materialResults[state.Materials[i]].Text = $"{r.RequiredMass:G8} g   ·   {r.MassFraction:P3}";
+            }
+            batchSummary.Text = $"{L("Total", "合计")}: {results.Sum(r => r.RequiredMass):G10} g  ·  {results.Count} {L("materials", "种原料")}";
             Save();
         }
-        catch (Exception ex) { recipeOutput.Text = Error(ex); }
+        catch (Exception ex)
+        {
+            foreach (var result in materialResults.Values) result.Text = "—";
+            batchSummary.Text = L("Complete the recipe to calculate", "完善原料输入后自动计算");
+            recipeOutput.Text = Error(ex);
+        }
     }
     protected override void OnActivityResult(int requestCode, Android.App.Result resultCode, Android.Content.Intent? data)
     {
