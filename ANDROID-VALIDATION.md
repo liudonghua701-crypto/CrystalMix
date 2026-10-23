@@ -1,5 +1,9 @@
 # Android verification
 
+## Android 1.2.1 — opt-in precursor constraints
+
+Verified on 2026-10-23 in [Android 14 run 39951156744](https://github.com/liudonghua701-crypto/CrystalMix/actions/runs/39951156744). With the saved BaAs/Fe2As/KAs preset present, the switch and input started disabled; Fe2O3 generated elemental Fe and O without applying that preset. Explicit opt-in enabled the input and the arsenide recipe regression passed. Screenshots were inspected. The full run also passed actual-weighing and workspace regressions. Shared-core assertions: 7,118; APK signatures v2/v3 passed. Existing drafts without the new boolean property deserialize to false. Physical-phone and CSV interaction limits remain unchanged.
+
 ## Android 1.2.0 — actual weighed mass
 
 Measured-mass preview, invalid input, Cancel and Apply passed on Android 14, together with the existing workspace regressions. See [the 1.2.0 verification report](WEIGHING-VALIDATION.md) and [run 39590243343](https://github.com/liudonghua701-crypto/CrystalMix/actions/runs/39590243343). Shared-core coverage is now 7,118 assertions. The new Apply operation updates batch mass while preserving formulas and molar parts.
