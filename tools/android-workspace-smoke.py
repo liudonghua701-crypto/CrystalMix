@@ -41,6 +41,9 @@ edit("Molar parts 1", "2")
 assert "Total: 20 g" in texts()
 screenshot("workspace-edited")
 top(); click_text("Target composition ▾")
+if os.environ.get("RELEASE_TAG", "").startswith("android-v1.2.1"):
+    import android_basis
+    android_basis.run(edit, top)
 edit("x (0–1)", "0.25")
 click_text("Generate editable recipe", scroll=True); click_text("Use recipe")
 assert "BaAs" in texts() and "0.75" in texts(), "Target did not fill editable recipe"

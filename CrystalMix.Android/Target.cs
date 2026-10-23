@@ -25,13 +25,22 @@ public partial class MainActivity
         Input(content, L("Target formula", "目标化学式"), state.Target, s => { state.Target = s; Preview(); });
         Input(content, "x (0–1)", state.X, s => { state.X = s; Preview(); }, true);
         content.AddView(output); Preview();
-        Input(content, L("Actual materials · comma separated; blank = elements", "实际原料 · 逗号分隔；留空采用元素单质"), state.Basis, s => state.Basis = s);
+        var useMaterials = new CheckBox(this) { Text = L("Use selected actual materials", "启用指定实际原料"), Checked = state.UseActualMaterials };
+        useMaterials.SetTextColor(ink); content.AddView(useMaterials);
+        content.AddView(Text(L("Off: generate elemental molar parts from the target. On: balance only the materials entered below.",
+            "关闭时按目标组成生成元素单质配比；开启后才使用下方指定原料进行配平。"), 13));
+        var basisInput = Input(content, L("Actual materials · comma separated; blank = elements", "实际原料 · 逗号分隔；留空采用元素单质"), state.Basis, s => state.Basis = s);
+        basisInput.Enabled = state.UseActualMaterials;
+        useMaterials.CheckedChange += (_, e) =>
+        { state.UseActualMaterials = e.IsChecked; basisInput.Enabled = e.IsChecked; Save(); };
         content.AddView(Button(L("Generate editable recipe", "生成可编辑配料表"), () =>
         {
             try
             {
                 var target = TargetFormula.Evaluate(state.Target, Number(state.X));
-                var basis = state.Basis.Split(new[] { ',', '，', ';', '；' }, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                var basis = state.UseActualMaterials
+                    ? state.Basis.Split(new[] { ',', '，', ';', '；' }, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                    : Array.Empty<string>();
                 var recipe = TargetRecipe.Suggest(target, basis);
                 void Apply()
                 {
@@ -65,7 +74,9 @@ public partial class MainActivity
     private void ShowGuide()
     {
         content.AddView(Text(L("A small guide to precise batches", "配料计算使用说明"), 22));
-        content.AddView(Text("CrystalMix Android 1.2.0", 13));
+        content.AddView(Text("CrystalMix Android 1.2.1", 13));
+        content.AddView(Text(L("Selected actual materials are off by default. Enable Use selected actual materials only when you want to constrain target balancing to those precursors. Otherwise the target generates elemental molar parts; disabled material text is ignored.",
+            "指定实际原料默认关闭。只有需要按所选原料配平时，才勾选启用指定实际原料；否则按目标生成元素单质配比，不使用禁用栏中的文字。")));
         content.AddView(Text(L("One workspace: expand Target composition to generate a recipe. Edit formulas, molar parts and total mass; weighing results update in each row. Use the bottom bar to add materials or isotopes. More contains exports and this guide. Target edits only change the preview until you confirm replacement.",
             "单页工作台：展开目标组成可生成配料表。修改化学式、摩尔份数或总质量，每行称量结果即时更新。底部可添加原料或同位素；更多菜单提供导出与帮助。目标编辑仅更新预览，确认替换后才修改原料。")));
         var instructions = AdvancedHelp.Get(Localizer.Language)

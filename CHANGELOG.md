@@ -2,6 +2,12 @@
 
 This file records user-visible changes and the actual development sequence. Version 1.1.0 is the first numbered GitHub release. Earlier development snapshots retained application version 1.0.0; the entries below identify them by commit instead of inventing retroactive release numbers.
 
+## Android 1.2.1 — 2026-10-23
+
+- Made selected actual materials opt-in when generating a target recipe. The default and migrated pre-1.2.1 drafts ignore the stored precursor text and generate elemental molar parts from the target.
+- Added a localized checkbox and disabled the precursor input while it is off. Explicitly enabling it restores constrained balancing with the saved precursor text; the choice is saved in the draft.
+- Added an emulator regression for Fe2O3 with the old BaAs/Fe2As/KAs preset disabled, followed by explicit opt-in and the existing arsenide balancing workflow. Windows remains at 1.2.0.
+
 ## Windows 1.2.0 and Android 1.2.0 — 2026-10-21
 
 - Added measured-mass scaling for chunks and other difficult-to-weigh materials. Choose one material, enter its actual mass in grams, preview the old/new targets and apply to the entire batch.
