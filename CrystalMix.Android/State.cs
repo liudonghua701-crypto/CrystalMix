@@ -14,18 +14,23 @@ public sealed class MobileState
     public bool English { get; set; } = !System.Globalization.CultureInfo.CurrentUICulture.Name.StartsWith("zh");
     public int Page { get; set; }
     public bool TargetExpanded { get; set; }
-    public bool UseActualMaterials { get; set; }
+    public int BasisSchemaVersion { get; set; } = 1;
     public string Total { get; set; } = "10";
     public string Target { get; set; } = "Ba1-xKxFe2As2";
     public string X { get; set; } = "0.4";
-    public string Basis { get; set; } = "BaAs, Fe2As, KAs";
+    public string Basis { get; set; } = "";
     public List<MaterialState> Materials { get; set; } = new() { new() { Formula = "Fe" }, new() { Formula = "Se" } };
 }
 public partial class MainActivity
 {
     private void Restore()
     {
-        try { state = JsonSerializer.Deserialize<MobileState>(GetPreferences(Android.Content.FileCreationMode.Private)!.GetString("recipe", "")!) ?? new(); }
+        try
+        {
+            var json = GetPreferences(Android.Content.FileCreationMode.Private)!.GetString("recipe", "")!;
+            state = JsonSerializer.Deserialize<MobileState>(json) ?? new();
+            state.Basis = BasisDraftMigration.Restore(json, state.Basis);
+        }
         catch { state = new(); }
         state.Page = Math.Clamp(state.Page, 0, 3);
     }

@@ -2,6 +2,12 @@
 
 This file records user-visible changes and the actual development sequence. Version 1.1.0 is the first numbered GitHub release. Earlier development snapshots retained application version 1.0.0; the entries below identify them by commit instead of inventing retroactive release numbers.
 
+## Android 1.2.2 — 2026-10-23
+
+- Removed the actual-material enable switch. The field now starts empty and is always editable: blank/whitespace uses target elemental proportions, entered formulas constrain balancing, and clearing the field removes that constraint.
+- Migrated disabled 1.2.1 precursor text and the older automatic arsenide preset to an empty field. Explicitly enabled 1.2.1 material lists and other custom legacy lists remain; existing weighing rows are preserved. A schema marker prevents newly entered arsenide lists from being cleared on future launches.
+- Added six draft-migration checks and an emulator scenario covering empty, entered and cleared material text.
+
 ## Android 1.2.1 — 2026-10-23
 
 - Made selected actual materials opt-in when generating a target recipe. The default and migrated pre-1.2.1 drafts ignore the stored precursor text and generate elemental molar parts from the target.

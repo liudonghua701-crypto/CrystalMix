@@ -4,9 +4,9 @@ CrystalMix Android is a native, offline application that reuses the Windows calc
 
 ## Install
 
-Version 1.2.0 passed calculation, signature, installation, startup, actual-weighing and workspace checks on a Linux-hosted Android 14 emulator, including a narrow screen with enlarged fonts. See [the verification report](WEIGHING-VALIDATION.md). Physical-device testing and CSV file-picker/share-sheet interactions remain pending. Download `CrystalMix-Android-1.2.1.apk` from the **Android 1.2.1** GitHub pre-release, open it on your phone, and allow installation from that browser or file manager when Android requests it. The minimum version is **Android 8.0 (API 26)**. One APK contains ARM64, ARM32 and x86-64 native runtimes. This is a directly installable APK, not a Play Store listing.
+Version 1.2.0 passed calculation, signature, installation, startup, actual-weighing and workspace checks on a Linux-hosted Android 14 emulator, including a narrow screen with enlarged fonts. See [the verification report](WEIGHING-VALIDATION.md). Physical-device testing and CSV file-picker/share-sheet interactions remain pending. Download `CrystalMix-Android-1.2.2.apk` from the **Android 1.2.2** GitHub pre-release, open it on your phone, and allow installation from that browser or file manager when Android requests it. The minimum version is **Android 8.0 (API 26)**. One APK contains ARM64, ARM32 and x86-64 native runtimes. This is a directly installable APK, not a Play Store listing.
 
-Install 1.2.1 over an earlier Android release to retain private recipe drafts; the application ID and signing certificate are unchanged. Do not uninstall first if you want to retain drafts.
+Install 1.2.2 over an earlier Android release to retain private recipe drafts; the application ID and signing certificate are unchanged. Do not uninstall first if you want to retain drafts.
 
 The app requests no network permission. Its isotope data and calculations work offline. Android may display a warning for an app installed outside a store; use the published checksum to identify the released file.
 
@@ -17,7 +17,7 @@ Press **Use actual mass** under the material you have weighed. Enter grams, revi
 ## Mobile workflow
 
 - **Workspace:** edit each material formula and its molar parts side by side. Weighing mass and fraction update in the same row immediately; the total stays visible at the bottom. Use Label / remove for optional names and deletion. Invalid inputs clear old results.
-- **Expandable target settings:** evaluate a target composition and x, then optionally enable **Use selected actual materials** to balance against specific precursors. This switch is off by default (including older drafts after upgrade); disabled precursor text is ignored and the target generates elemental molar parts. A blank enabled basis also uses elements. Generate an editable recipe after confirming replacement of existing material cards. Invalid targets preserve the current recipe.
+- **Expandable target settings:** evaluate a target composition and x, then optionally enter actual material formulas separated by commas. The field starts empty: blank or whitespace uses elemental molar parts; nonempty text uses those materials for balancing. Clear it to return to elemental proportions. There is no enable switch. Generate an editable recipe after confirming replacement of existing material cards. Invalid targets preserve the current recipe.
 - **Isotopes dialog:** open from the fixed bottom bar and search all 3,498 records by symbol, isotope syntax or Chinese/English element name. The default stable-plus-one-year subset has 407 records. Stable-only and all-record filters are also available. Results are paged in groups of 20. Adding a record closes the dialog and returns to the new material in the workspace.
 - **More menu:** copy results, share CSV text, save a CSV file or open the Guide dialog in the selected language. The top language button switches English and Chinese. Formula examples include `[175Lu]2O3`, `[180mTa]`, and `Ba1-xKxFe2As2`.
 

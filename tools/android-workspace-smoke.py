@@ -44,6 +44,9 @@ top(); click_text("Target composition ▾")
 if os.environ.get("RELEASE_TAG", "").startswith("android-v1.2.1"):
     import android_basis
     android_basis.run(edit, top)
+if os.environ.get("RELEASE_TAG", "").startswith("android-v1.2.2"):
+    import android_empty_basis
+    android_empty_basis.run(edit, top)
 edit("x (0–1)", "0.25")
 click_text("Generate editable recipe", scroll=True); click_text("Use recipe")
 assert "BaAs" in texts() and "0.75" in texts(), "Target did not fill editable recipe"

@@ -4,6 +4,14 @@ using CrystalMix.Calculation;
 using System.Text.RegularExpressions;
 
 int checks = WeighingTests.Run();
+foreach (var (json, basis, expected) in new[] {
+    ("{}", "BaAs, Fe2As, KAs", ""),
+    ("{}", "Fe2O3", "Fe2O3"),
+    ("{\"UseActualMaterials\":false}", "Fe2O3", ""),
+    ("{\"UseActualMaterials\":true}", "BaAs, Fe2As, KAs", "BaAs, Fe2As, KAs"),
+    ("{\"BasisSchemaVersion\":1}", "BaAs, Fe2As, KAs", "BaAs, Fe2As, KAs"),
+    ("{\"BasisSchemaVersion\":1}", "", "") })
+    Require(CrystalMix.Mobile.BasisDraftMigration.Restore(json, basis) == expected, "Basis draft migration");
 void Require(bool value, string detail) { checks++; if (!value) throw new Exception(detail); }
 void Near(double a, double b) => Require(double.IsFinite(a) && Math.Abs(a - b) < 1e-8, $"{a} != {b}");
 void Reject(Action action) { try { action(); } catch (Exception e) when (e is ArgumentException or FormulaException or FormatException) { checks++; return; } throw new Exception("Invalid input accepted"); }
