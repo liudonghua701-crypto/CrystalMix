@@ -1,5 +1,9 @@
 # Android verification
 
+## Android 1.2.2 — empty input, no switch
+
+Verified on 2026-10-23 in [Android 14 run 39952656394](https://github.com/liudonghua701-crypto/CrystalMix/actions/runs/39952656394). Actual materials started empty and editable, with no checkbox. Fe2O3 with an empty basis generated Fe:O = 2:3; entering Fe2O3 generated one Fe2O3 row; clearing to whitespace restored elemental rows. Entered arsenides and the full actual-weighing/workspace regression also passed. Screenshots were inspected. All 7,124 core/migration assertions and APK v2/v3 signature checks passed. Migration checks cover disabled, enabled and legacy drafts plus preservation of newly saved custom material lists. Physical-phone and CSV interaction limits remain unchanged.
+
 ## Android 1.2.1 — opt-in precursor constraints
 
 Verified on 2026-10-23 in [Android 14 run 39951156744](https://github.com/liudonghua701-crypto/CrystalMix/actions/runs/39951156744). With the saved BaAs/Fe2As/KAs preset present, the switch and input started disabled; Fe2O3 generated elemental Fe and O without applying that preset. Explicit opt-in enabled the input and the arsenide recipe regression passed. Screenshots were inspected. The full run also passed actual-weighing and workspace regressions. Shared-core assertions: 7,118; APK signatures v2/v3 passed. Existing drafts without the new boolean property deserialize to false. Physical-phone and CSV interaction limits remain unchanged.
