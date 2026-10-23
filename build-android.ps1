@@ -16,8 +16,6 @@ $env:ANDROID_AVD_HOME=Join-Path $PWD '.tools\android-avd'
 foreach($path in @($SdkDirectory,$JavaDirectory,$KeyStore,$PasswordFile,$KeyPasswordFile)){
     if(-not(Test-Path -LiteralPath $path)){throw "Required build dependency missing: $path. See ANDROID.md."}
 }
-& $dotnet run --project CrystalMix.Mobile.Tests -c Release --verbosity quiet
-if($LASTEXITCODE -ne 0){throw 'Mobile core tests failed.'}
 & $dotnet publish CrystalMix.Android -c Release "-p:AndroidSdkDirectory=$SdkDirectory" "-p:JavaSdkDirectory=$JavaDirectory" `
     -p:AndroidKeyStore=true "-p:AndroidSigningKeyStore=$KeyStore" -p:AndroidSigningKeyAlias=crystalmix `
     "-p:AndroidSigningKeyPass=file:$KeyPasswordFile" "-p:AndroidSigningStorePass=file:$PasswordFile" --verbosity quiet

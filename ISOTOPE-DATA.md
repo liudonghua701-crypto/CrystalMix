@@ -18,14 +18,6 @@ Nuclear lifetime and chemical stability are different properties. The program do
 
 Ta-180's roughly eight-hour ground state remains distinct from long-lived Ta-180m. The NUBASE lower bound for Ta-180m is retained as a lower bound, not relabeled as stable. Source `#` or systematic-estimate mass flags are stored in `Estimated` and shown in the catalog. Central masses are used for weighing calculations; evaluation uncertainties are not propagated. Original snapshots retain the source detail.
 
-## Offline reproduction
+## Offline database
 
-`data-sources/isotope-sources.zip` contains the three original source snapshots. `data-sources/manifest.json` records their URLs, retrieval date and SHA-256 hashes. Run:
-
-```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools/import-isotopes.ps1
-```
-
-The importer verifies source hashes before producing the embedded JSON. If the default cache directory is absent, it extracts the archive automatically. Windows PowerShell 5.1 serialization is selected explicitly to keep number formatting reproducible across development environments. Reproduction from an independently extracted snapshot has been verified by comparing the generated JSON hash.
-
-The application embeds its database and requires no runtime network access. Import reuses the existing `PeriodicTable` symbol map; it does not regenerate or modify the 118-element conventional-weight table. Future updates must review the source manifest, resulting records and snapshot-count tests together.
+The application embeds `CrystalMix/Data/isotopes.json` and requires no runtime network access. The database reuses the existing 118-element symbol map and conventional-weight table. Source archives and import utilities are maintained locally rather than distributed with the application sources. Future data updates must preserve source attribution and review numerical changes.

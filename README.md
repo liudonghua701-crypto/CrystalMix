@@ -12,7 +12,7 @@ Both editions support **Use actual mass**: enter the measured mass of one materi
 
 ## Android APK
 
-A native, offline Android preview is available for **Android 8.0 and later**. Installation, startup and core workflows passed on an Android 14 emulator; see [verification status](ANDROID-VALIDATION.md). Physical-device testing remains pending. It shares the chemistry and calculation sources with the Windows edition and provides a single weighing workspace with live row results, collapsible target settings, a contextual isotope picker, bilingual Help and CSV export.
+A native, offline Android preview is available for **Android 8.0 and later**. Installation, startup and core workflows have been checked on an Android 14 emulator. Physical-device testing remains pending. It shares the chemistry and calculation sources with the Windows edition and provides a single weighing workspace with live row results, collapsible target settings, a contextual isotope picker, bilingual Help and CSV export.
 
 [Download Android APK](https://github.com/liudonghua701-crypto/CrystalMix/releases/download/android-v1.2.2/CrystalMix-Android-1.2.2.apk) · [Android installation, features and builds](ANDROID.md)
 
@@ -102,49 +102,34 @@ cd CrystalMix
 .\build-release.ps1
 ```
 
-The script restores/builds the project, runs core tests, verifies installer encodings, publishes a self-contained `win-x64` executable, and creates the single-file installer. A first source build needs access to the .NET restore feeds unless the required packs are already cached. Output:
+The script restores/builds the project, verifies installer encodings, publishes a self-contained `win-x64` executable, and creates the single-file installer. A first source build needs access to the .NET restore feeds unless the required packs are already cached. Output:
 
 - `dist/publish/CrystalMix.exe`: self-contained application.
 - `dist/CrystalMix-Setup-x64.exe`: installer, also copied to the project root.
 - `dist/SHA256.txt`: installer checksum.
 
-Build scripts prefer `.tools/dotnet/dotnet.exe` when present, otherwise `dotnet` from PATH. Local tool caches and build outputs are excluded from Git and the source ZIP. The project has no third-party test-framework dependency.
-
-## Tests and release checks
-
-```powershell
-dotnet run --project CrystalMix.Tests -c Release
-# Requires an interactive Windows desktop:
-dotnet run --project CrystalMix.Tests -c Release -- --ui
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\smoke-release.ps1
-```
-
-Tests cover element names, ordinary formulas, all catalog isotope formulas and compounds, isomers, variable expressions, multiple doping values, rejected input, total mass closure, balance conflicts, and parser regressions. UI checks exercise target editing, language-specific help, font scaling, and isotope selection. Screenshots are saved under `dist/ui-checks`. Font-size simulations do not replace testing every physical monitor/DPI combination.
-
-The release smoke check extracts the package, verifies all six payload files, starts and cleanly closes the application, and checks the Chinese installer prompt before cancelling. It does not replace an existing installation.
-
-Installer-specific checks are available in `test-installer.ps1`, `test-install-dialog.ps1`, `test-install-browse.ps1`, and `test-uninstall-entry.ps1`. The full installer regression performs actual installation/uninstallation in a test location and restores previously registered information in its cleanup block. Run it only when intentionally testing those changes.
+Build scripts prefer `.tools/dotnet/dotnet.exe` when present, otherwise `dotnet` from PATH. Local tool caches and build outputs are excluded from Git and the source ZIP.
 
 ## Project layout
 
 | Path | Purpose |
 | --- | --- |
 | `CrystalMix/` | Windows Forms application, chemistry model, calculations and localization |
-| `CrystalMix/Assets/` | Editable SVG, PNG preview and multi-resolution ICO |
+| `CrystalMix/Assets/` | Application PNG and multi-resolution ICO |
 | `CrystalMix/Data/isotopes.json` | Embedded, offline isotope snapshot |
-| `CrystalMix.Tests/` | Calculation, localization and desktop UI checks |
+| `CrystalMix.Android/` | Native Android interface and application configuration |
 | `installer/` | Install/uninstall scripts and IExpress configuration |
-| `tools/` | Reproducible icon generation and isotope import |
-| `data-sources/` | Archived source data and checksum manifest |
-| `build-release.ps1` | Test, publish and package pipeline |
+| `tools/` | Private Android signing-key setup |
+| `build-android.ps1` | Build, align and sign the Android APK |
+| `build-release.ps1` | Publish and package the Windows application |
 
-The release source ZIP contains tracked engineering files, including test code, installer scripts, original icon assets and source-data snapshots. It excludes `.git`, credentials, development tool caches, and generated binaries. Clone the repository if you need commit history; download the installer if you only want to use the application.
+The current source tree contains application sources, embedded data, runtime assets, build/install scripts and essential documentation. Optional tests, reports and development-only resources are kept locally and excluded from new commits. Download an installer to use the application; clone the repository to build it.
 
 ## Maintenance and release history
 
-See [CHANGELOG.md](CHANGELOG.md) for version 1.1.0 and the earlier commit-by-commit development history. Earlier validation reports are historical snapshots, not claims about the current installer checksum. Release assets include checksums for the current installer and source archive.
+See [CHANGELOG.md](CHANGELOG.md) for release history. Release attachments contain the application installer and its SHA-256 checksum. Earlier Git commits retain historical development files; repository history has not been rewritten.
 
-Rebuild the icon with `powershell.exe -File tools/build-icon.ps1`. Recreate the isotope JSON with `powershell.exe -File tools/import-isotopes.ps1`; the importer verifies the archived source hashes and uses a fixed PowerShell serialization runtime.
+The application uses the committed icon files and embedded isotope database directly. See [ISOTOPE-DATA.md](ISOTOPE-DATA.md) for scientific sources and data limitations.
 
 Source files and documentation use UTF-8. Installer PowerShell scripts use UTF-8 BOM for Windows PowerShell; CMD launchers and IExpress configuration remain ASCII. Installation/uninstallation text is handled as Unicode. Uninstallation validates the registered folder and preserves unrelated user files; locked files cause a recoverable error instead of silently deleting the uninstall entry.
 

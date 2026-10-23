@@ -4,7 +4,7 @@ CrystalMix Android is a native, offline application that reuses the Windows calc
 
 ## Install
 
-Version 1.2.0 passed calculation, signature, installation, startup, actual-weighing and workspace checks on a Linux-hosted Android 14 emulator, including a narrow screen with enlarged fonts. See [the verification report](WEIGHING-VALIDATION.md). Physical-device testing and CSV file-picker/share-sheet interactions remain pending. Download `CrystalMix-Android-1.2.2.apk` from the **Android 1.2.2** GitHub pre-release, open it on your phone, and allow installation from that browser or file manager when Android requests it. The minimum version is **Android 8.0 (API 26)**. One APK contains ARM64, ARM32 and x86-64 native runtimes. This is a directly installable APK, not a Play Store listing.
+Version 1.2.0 passed calculation, signature, installation, startup, actual-weighing and workspace checks on a Linux-hosted Android 14 emulator, including a narrow screen with enlarged fonts.  Physical-device testing and CSV file-picker/share-sheet interactions remain pending. Download `CrystalMix-Android-1.2.2.apk` from the **Android 1.2.2** GitHub pre-release, open it on your phone, and allow installation from that browser or file manager when Android requests it. The minimum version is **Android 8.0 (API 26)**. One APK contains ARM64, ARM32 and x86-64 native runtimes. This is a directly installable APK, not a Play Store listing.
 
 Install 1.2.2 over an earlier Android release to retain private recipe drafts; the application ID and signing certificate are unchanged. Do not uninstall first if you want to retain drafts.
 
@@ -41,16 +41,10 @@ powershell.exe -File .\build-android.ps1 -SdkDirectory "E:\Android\sdk" `
 
 For a new independent signing identity, run `powershell.exe -File tools/new-android-signing-key.ps1` after installing the JDK. This refuses to overwrite existing signing files. The keystore alias must be `crystalmix`. Use a private release keystore with at least a 2048-bit RSA key and a suitably long validity period. Store and key passwords are supplied through **separate files**, even when their contents are identical: the Android signer reads password files sequentially. Never commit a keystore or password file.
 
-`build-android.ps1` runs the cross-platform core tests, publishes the APK, aligns it, applies the release signature with the official Android signing tool, verifies the signature, and writes `dist/ANDROID-SHA256SUMS.txt`. The source and data are compiled directly from the shared desktop files; the mobile UI lives in `CrystalMix.Android/`.
+`build-android.ps1` publishes the APK, aligns it, applies the release signature with the official Android signing tool, verifies the signature, and writes `dist/ANDROID-SHA256SUMS.txt`. The source and data are compiled directly from the shared desktop files; the mobile UI lives in `CrystalMix.Android/`.
 
 For this project's release, the private signing files are kept in the ignored `.signing/` directory on the owner's machine. Back up this directory securely and separately from the repository. Future updates must use the same signing key and a higher Android `ApplicationVersion` to install over existing versions. The source ZIP deliberately excludes signing keys, passwords, `.git`, caches, binaries and emulator images.
 
-## Tests
+## Distribution
 
-```powershell
-dotnet run --project CrystalMix.Mobile.Tests -c Release
-```
-
-The mobile shared-core suite performs 7,040 assertions, including all isotope compounds, isotope names, hydrate/nested formulas, isomers, doping endpoints and intermediate values, exact precursor balance, inconsistent targets, invalid input, mass closure and English Help language isolation. Desktop tests remain separate and unchanged.
-
-APK signature, manifest, ABI and runtime checks are recorded in the Android release validation report. A simulator cannot establish compatibility with every handset or vendor-specific Android build.
+Release attachments contain the APK and its SHA-256 checksum. Optional test code, screenshots and reports are not part of the current public source tree. Physical-device coverage and CSV picker/share-sheet behavior remain outside the completed emulator checks.

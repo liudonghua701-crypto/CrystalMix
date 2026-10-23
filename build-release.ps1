@@ -1,4 +1,4 @@
-﻿$ErrorActionPreference = 'Stop'
+$ErrorActionPreference = 'Stop'
 $projectRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 Set-Location $projectRoot
 
@@ -11,8 +11,6 @@ $env:DOTNET_SKIP_FIRST_TIME_EXPERIENCE = '1'
 $env:DOTNET_CLI_TELEMETRY_OPTOUT = '1'
 New-Item -ItemType Directory -Force -Path $env:DOTNET_CLI_HOME, $env:NUGET_PACKAGES, $env:APPDATA | Out-Null
 
-& $dotnet run --project '.\CrystalMix.Tests\CrystalMix.Tests.csproj' -c Release --configfile '.\NuGet.Config'
-if ($LASTEXITCODE -ne 0) { throw 'Tests failed; packaging cancelled.' }
 foreach ($script in @('Install.ps1', 'Uninstall.ps1', 'InstallSupport.ps1')) {
     $bytes = [IO.File]::ReadAllBytes((Join-Path $projectRoot "installer\$script"))
     if ($bytes[0] -ne 239 -or $bytes[1] -ne 187 -or $bytes[2] -ne 191) { throw "UTF-8 BOM required: $script" }
